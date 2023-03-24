@@ -1,21 +1,37 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 class ButtonEditor extends DefaultCellEditor {
 
     protected JButton button;
     private String label;
     private boolean isPushed;
+    static int popo = 1;
+    static int popolist[] = {1};
 
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonEditor(JCheckBox checkBox, JTable tabla) {
         super(checkBox);
-        button = new JButton();
+        button = new JButton("a");
         button.setOpaque(true);
+        System.out.println(popo);
+        popo++;
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ///AQUI BORRA LAS CHINGADERAS
+                tabla.getValueAt(0,0);
+                tabla.getSelectedRow();
+                System.out.println(
+                        tabla.getSelectedRows());
+                String cuentas[];
+
                 fireEditingStopped();
             }
         });
@@ -40,7 +56,7 @@ class ButtonEditor extends DefaultCellEditor {
     @Override
     public Object getCellEditorValue() {
         if (isPushed) {
-            JOptionPane.showMessageDialog(button, label + ": Ouch!");
+            JOptionPane.showMessageDialog(button, label + ": popo!");
         }
         isPushed = false;
         return label;

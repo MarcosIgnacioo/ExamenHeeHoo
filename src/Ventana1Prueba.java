@@ -33,7 +33,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-public class Ventana1Prueba extends JFrame{
+public class Ventana1Prueba extends JFrame{//pene
 
     private String anterior = "login";
     private String actual = "login";
@@ -134,6 +134,24 @@ public class Ventana1Prueba extends JFrame{
         btnAccess.setSize(250,40);
         btnAccess.setLocation(120,205);
         jp1.add(btnAccess);
+
+        String[] nombresColumnas = {"No. Control", "Apellidos", "Nombres", "Acciones"};
+        JButton popo = new JButton("asd");
+
+        DefaultTableModel dm = new DefaultTableModel();
+        dm.setDataVector(new Object[][]{{"button 1", "foo"}, // filas
+                                        {"button 2", "bar"}}, // filas
+                         new Object[]{"Button", "String"});// nombre de columnas columnas
+
+        JTable tabla = new JTable(dm);
+        tabla.getColumn("Button").setCellRenderer(new ButtonRenderer());
+        tabla.getColumn("Button").setCellEditor(new ButtonEditor(new JCheckBox(),tabla));
+        tabla.setSize(250,100);
+        jp1.add(tabla);
+
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        scrollPane.setSize(250,100);
+        jp1.add(scrollPane);
 
         btnAccess.addActionListener(new ActionListener() {
 
