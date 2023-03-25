@@ -14,12 +14,13 @@ public class ExamenVentana extends JFrame {
     String datosAnteriores = null;
     String datosNuevos = null;
     private String bienvenidoNombre = "";
+    private static int usuarioId = 0;
     private static String usuarioInfo [] = new String[4];
 
 
     boolean leerParaCreer(String correo, int size){
         String userName, passwordConf;
-        String [] cuentas;
+        String cuentas[] = new String[size];
         int entro = 0;
         String filePath = "src/users.txt";
         boolean correoExiste = false;
@@ -27,21 +28,14 @@ public class ExamenVentana extends JFrame {
             FileReader fileReader = new FileReader("src/users.txt");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String linea;
+            int contador = 0;
             while ((linea = bufferedReader.readLine()) != null) {
                 cuentas = linea.split(",");
-                for (int pi = 0; pi<3; pi++){
-                    System.out.println(cuentas[pi]);
+                if (cuentas[2].equals(correo) && contador != usuarioId){
+                    correoExiste = true;
                 }
-            }
-
-            if (entro == 0){
-                JOptionPane.showMessageDialog(null,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
-            }
-            else{
-                JOptionPane.showMessageDialog(null,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
-                anterior = actual;
-                actual = "loggedIn";
-                limpiarVentana();
+                contador++;
+                System.out.println(cuentas[2]);
             }
             fileReader.close();
         } catch (IOException de) {
@@ -64,6 +58,7 @@ public class ExamenVentana extends JFrame {
             while ((line = bufferedReader.readLine()) != null) {
                 sentences[i] = line;
                 if (sentences[i].equals(infoAnterior)){
+                    usuarioId = i;
                     memoriaLinea = i;
                 }
                 i++;
@@ -140,7 +135,6 @@ public class ExamenVentana extends JFrame {
         }
 
         if (actual.equals("ModificarCuenta")){
-            System.out.println("yepa");
             panel = modificarCuenta();
             this.add(panel);
 
@@ -355,7 +349,6 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String bubble = anterior;
-                System.out.println(anterior);
                 anterior = actual;
                 actual = bubble;
                 limpiarVentana();
@@ -365,7 +358,7 @@ public class ExamenVentana extends JFrame {
         actualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt"))){
+                if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false){
                     if (datosAnteriores == null) {
                         datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
                     }
@@ -374,7 +367,7 @@ public class ExamenVentana extends JFrame {
                     datosAnteriores = datosNuevos;
                 }
                 else{
-                    JOptionPane.showMessageDialog(null,"YA EXISTE EL CORREO PA","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
