@@ -11,61 +11,80 @@ public class ExamenVentana extends JFrame {
     private String anterior = "logIn";
     private String actual = "logIn";
     public JPanel panel = null;
-
+    String datosAnteriores = null;
+    String datosNuevos = null;
     private String bienvenidoNombre = "";
     private static String usuarioInfo [] = new String[4];
 
-    static void modifyFile(String filePath, String oldString, String newString)
+
+    boolean leerParaCreer(String correo, int size){
+        String userName, passwordConf;
+        String [] cuentas;
+        int entro = 0;
+        String filePath = "src/users.txt";
+        boolean correoExiste = false;
+        try {
+            FileReader fileReader = new FileReader("src/users.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                cuentas = linea.split(",");
+                for (int pi = 0; pi<3; pi++){
+                    System.out.println(cuentas[pi]);
+                }
+            }
+
+            if (entro == 0){
+                JOptionPane.showMessageDialog(null,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
+            }
+            else{
+                JOptionPane.showMessageDialog(null,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
+                anterior = actual;
+                actual = "loggedIn";
+                limpiarVentana();
+            }
+            fileReader.close();
+        } catch (IOException de) {
+            de.printStackTrace();
+        }
+        return correoExiste;
+    }
+
+    static void actualizarDatos(String archivo, String infoAnterior, String infoActual, int fileSize)
     {
-        File fileToBeModified = new File(filePath);
+        int memoriaLinea = 0;
 
-        String oldContent = "";
-
-        BufferedReader reader = null;
-
-        FileWriter writer = null;
-
-        try
-        {
-            reader = new BufferedReader(new FileReader(fileToBeModified));
-
-            //Reading all the lines of input text file into oldContent
+        try {
+            FileReader fileReader = new FileReader(archivo);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             String line;
-
-            while ((line = reader.readLine()) != null)
-            {
-                oldContent = oldContent + line.split(",");
+            String[] sentences = new String[fileSize];
+            int i = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                sentences[i] = line;
+                if (sentences[i].equals(infoAnterior)){
+                    memoriaLinea = i;
+                }
+                i++;
             }
 
-            //Replacing oldString with newString in the oldContent
+            sentences[memoriaLinea] = infoActual;// actualiza la informacion pero no la escribe porque la guarda en un arreglo, es decir, aqui
+            //                                      esta tooooooodo el txt pero pues ya con esa unidad (1) de renglon cambiada PERO FALTA ESCRIBIRLO EN EL ARCHIVO PLEBE!!!!!!
+            FileWriter fileWriter = new FileWriter(archivo);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
-            String newContent = oldContent.replaceAll(oldString, newString);
+            for (int p = 0; p < i; p++) {
+                bufferedWriter.write(sentences[p]);
+                bufferedWriter.newLine(); // actualiza vuelve a escribir todo el archivo AQUI LO ESCRIBE Q LOCO
+            }
 
-            //Rewriting the input text file with newContent
-
-            writer = new FileWriter(fileToBeModified);
-
-            writer.write(newContent);
-        }
-        catch (IOException e)
-        {
+            bufferedWriter.close();
+            fileWriter.close();
+            bufferedReader.close();
+            fileReader.close();
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                //Closing the resources
-
-                reader.close();
-
-                writer.close();
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
         }
     }
     public int contadorFilas(String archivo){
@@ -172,36 +191,36 @@ public class ExamenVentana extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String userName, passwordConf;
                 String [] cuentas;
-                    int entro = 0;
-                    userName = usuarioTF.getText();
-                    passwordConf = String.valueOf(passwordTF.getPassword());
-                    try {
-                        FileReader fileReader = new FileReader("src/users.txt");
-                        BufferedReader bufferedReader = new BufferedReader(fileReader);
-                        String linea;
-                        while ((linea = bufferedReader.readLine()) != null) {
-                            cuentas = linea.split(",");
-                            if (cuentas[0].equals(userName) && cuentas[3].equals(passwordConf)){
-                                usuarioInfo = cuentas;
-                                bienvenidoNombre = userName;
-                                entro = 1;
-                            }
+                int entro = 0;
+                userName = usuarioTF.getText();
+                passwordConf = String.valueOf(passwordTF.getPassword());
+                try {
+                    FileReader fileReader = new FileReader("src/users.txt");
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String linea;
+                    while ((linea = bufferedReader.readLine()) != null) {
+                        cuentas = linea.split(",");
+                        if (cuentas[0].equals(userName) && cuentas[3].equals(passwordConf)){
+                            usuarioInfo = cuentas;
+                            bienvenidoNombre = userName;
+                            entro = 1;
                         }
-
-                        if (entro == 0){
-                            JOptionPane.showMessageDialog(enterPass,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(enterPass,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
-                            anterior = actual;
-                            actual = "loggedIn";
-                            limpiarVentana();
-                        }
-                        fileReader.close();
-                    } catch (IOException de) {
-                        de.printStackTrace();
                     }
+
+                    if (entro == 0){
+                        JOptionPane.showMessageDialog(enterPass,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(enterPass,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
+                        anterior = actual;
+                        actual = "loggedIn";
+                        limpiarVentana();
+                    }
+                    fileReader.close();
+                } catch (IOException de) {
+                    de.printStackTrace();
                 }
+            }
         });
 
         this.add(pLogIn);
@@ -227,18 +246,18 @@ public class ExamenVentana extends JFrame {
         barraMenu.setVisible(true);
 
         JMenu cuenta = new JMenu("Cuenta");
-            JMenuItem miCuenta = new JMenuItem("Mi cuenta");
-            JMenuItem cerrarSesion = new JMenuItem("Cerrar sesion");
+        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
+        JMenuItem cerrarSesion = new JMenuItem("Cerrar sesion");
         cuenta.add(miCuenta);
         cuenta.add(cerrarSesion);
 
         JMenu usuarios= new JMenu("Usuarios");
-            JMenuItem listaDeUsuarios = new JMenuItem("Lista de usuarios");
-            JMenuItem crearUsuario = new JMenuItem("Crear usuario");
+        JMenuItem listaDeUsuarios = new JMenuItem("Lista de usuarios");
+        JMenuItem crearUsuario = new JMenuItem("Crear usuario");
         usuarios.add(listaDeUsuarios);
 
         JMenu ayuda= new JMenu("Ayuda");
-            JMenuItem comoCrear = new JMenuItem("Como crear usuarios?");
+        JMenuItem comoCrear = new JMenuItem("Como crear usuarios?");
         ayuda.add(comoCrear);
 
 
@@ -346,16 +365,16 @@ public class ExamenVentana extends JFrame {
         actualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i<usuarioInfo.length; i++){
-                    System.out.println(usuarioInfo[i]);
+                if (!leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt"))){
+                    if (datosAnteriores == null) {
+                        datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
+                    }
+                    datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+cambiarPasswordTF.getText();
+                    actualizarDatos("src/users.txt", datosAnteriores, datosNuevos, contadorFilas("src/users.txt"));
+                    datosAnteriores = datosNuevos;
                 }
-
-                modifyFile("src/users.txt", usuarioInfo[0], cambiarNombreTF.getText());
-                modifyFile("src/users.txt", usuarioInfo[1], cambiarApellidosTF.getText());
-                modifyFile("src/users.txt", usuarioInfo[2], cambiarCorreoTF.getText());
-                modifyFile("src/users.txt", usuarioInfo[3], cambiarPasswordTF.getText());
-                for (int i = 0; i<usuarioInfo.length; i++){
-                    System.out.println(usuarioInfo[i]);
+                else{
+                    JOptionPane.showMessageDialog(null,"YA EXISTE EL CORREO PA","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
