@@ -227,7 +227,7 @@ public class ExamenVentana extends JFrame {
         pLoggedIn.setBackground(Color.pink);
         pLoggedIn.setLayout(null);
 
-        JLabel bienvenido = new JLabel("Hola " + bienvenidoNombre); // ver como actualizar el nombre cuando se cambia el usuario
+        JLabel bienvenido = new JLabel("Hola " +bienvenidoNombre); // ver como actualizar el nombre cuando se cambia el usuario
         bienvenido.setSize(400,30);
         bienvenido.setFont(new Font("Arial", Font.BOLD, 24));
         bienvenido.setLocation(0,0);
@@ -348,6 +348,8 @@ public class ExamenVentana extends JFrame {
         cancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println(usuarioInfo[0]);
+                bienvenidoNombre = usuarioInfo[0];
                 String bubble = anterior;
                 anterior = actual;
                 actual = bubble;
@@ -359,12 +361,22 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false){
+                    JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
                     if (datosAnteriores == null) {
                         datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
                     }
                     datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+cambiarPasswordTF.getText();
                     actualizarDatos("src/users.txt", datosAnteriores, datosNuevos, contadorFilas("src/users.txt"));
                     datosAnteriores = datosNuevos;
+                    usuarioInfo[0] = cambiarNombreTF.getText();
+                    usuarioInfo[1] = cambiarApellidosTF.getText();
+                    usuarioInfo[2] = cambiarCorreoTF.getText();
+                    usuarioInfo[3] = cambiarPasswordTF.getText();
+                    bienvenidoNombre = usuarioInfo[0];
+                    String bubble = anterior;
+                    anterior = actual;
+                    actual = bubble;
+                    limpiarVentana();
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
