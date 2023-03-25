@@ -44,6 +44,28 @@ public class ExamenVentana extends JFrame {
         return correoExiste;
     }
 
+    void leerParaCreer2(String correo, int size){
+        String userName, passwordConf;
+        String cuentas[] = new String[size];
+        int entro = 0;
+        String filePath = "src/users.txt";
+        boolean correoExiste = false;
+        try {
+            FileReader fileReader = new FileReader("src/users.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String linea;
+            int contador = 0;
+            while ((linea = bufferedReader.readLine()) != null) {
+                cuentas = linea.split(",");
+                System.out.println(contador);
+                contador++;
+            }
+            fileReader.close();
+        } catch (IOException de) {
+            de.printStackTrace();
+        }
+    }
+
     static void actualizarDatos(String archivo, String infoAnterior, String infoActual, int fileSize)
     {
         int memoriaLinea = 0;
@@ -360,7 +382,9 @@ public class ExamenVentana extends JFrame {
         actualizar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false){
+                File vacia = new File("src/users.txt");
+
+                if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false && vacia.length() != 0){
                     JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
                     if (datosAnteriores == null) {
                         datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
@@ -378,8 +402,13 @@ public class ExamenVentana extends JFrame {
                     actual = bubble;
                     limpiarVentana();
                 }
+                else if (vacia.length() == 0){
+                    JOptionPane.showMessageDialog(null,"yo no me llevo asi con usted","mal:(!", JOptionPane.ERROR_MESSAGE);
+
+                }
                 else{
-                    JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"El correo ingresado ya existe O","mal:(!", JOptionPane.ERROR_MESSAGE);
+
                 }
             }
         });
