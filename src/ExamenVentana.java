@@ -29,10 +29,14 @@ public class ExamenVentana extends JFrame {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String linea;
             int contador = 0;
+            int id = usuarioId;
             while ((linea = bufferedReader.readLine()) != null) {
                 cuentas = linea.split(",");
-                if (cuentas[2].equals(correo) && contador != usuarioId){
-                    correoExiste = true;
+                System.out.println("userID: "+usuarioId);
+                System.out.println("correo a cambiar: " + correo);
+                System.out.println("correo actual en el ciclon: " + cuentas[2]);
+                if (cuentas[2].equals(correo)){
+                        correoExiste = true;
                 }
                 contador++;
                 System.out.println(cuentas[2]);
@@ -121,7 +125,7 @@ public class ExamenVentana extends JFrame {
             throw new RuntimeException(ex);
         }
     }
-    public ExamenVentana(){
+    public ExamenVentana() throws InterruptedException {
         this.getContentPane().setBackground(Color.ORANGE);
         this.setVisible(true);
         this.setSize(700,900);
@@ -163,6 +167,13 @@ public class ExamenVentana extends JFrame {
             this.repaint();
             this.revalidate();
         }
+
+        if (actual.equals("RegistrarUsuario")){
+            panel = pRegisterUser();
+            this.add(panel);
+            this.repaint();
+            this.revalidate();
+        }
     }
     public JPanel logInCambio (){
         JPanel pLogIn = new JPanel();
@@ -179,7 +190,7 @@ public class ExamenVentana extends JFrame {
         enterUser.setVisible(true);
         pLogIn.add(enterUser);
 
-        JTextField usuarioTF = new JTextField();
+        JTextField usuarioTF = new JTextField("nombre");
         usuarioTF.setBounds(200,220,200,40);
         usuarioTF.setVisible(true);
         usuarioTF.getBorder();
@@ -192,7 +203,7 @@ public class ExamenVentana extends JFrame {
         enterPass.setVisible(true);
         pLogIn.add(enterPass);
 
-        JPasswordField passwordTF = new JPasswordField();
+        JPasswordField passwordTF = new JPasswordField("contra");
         passwordTF.setBounds(200,300,200,40);
         passwordTF.setVisible(true);
         pLogIn.add(passwordTF);
@@ -218,6 +229,7 @@ public class ExamenVentana extends JFrame {
                         cuentas = linea.split(",");
                         if (cuentas[0].equals(userName) && cuentas[3].equals(passwordConf)){
                             usuarioInfo = cuentas;
+                            System.out.println(usuarioInfo[0] + "Inicio de sesion");
                             bienvenidoNombre = userName;
                             entro = 1;
                         }
@@ -256,8 +268,6 @@ public class ExamenVentana extends JFrame {
         bienvenido.setVisible(true);
         pLoggedIn.add(bienvenido);
 
-
-
         JMenuBar barraMenu = new JMenuBar();
         barraMenu.setVisible(true);
 
@@ -271,6 +281,7 @@ public class ExamenVentana extends JFrame {
         JMenuItem listaDeUsuarios = new JMenuItem("Lista de usuarios");
         JMenuItem crearUsuario = new JMenuItem("Crear usuario");
         usuarios.add(listaDeUsuarios);
+        usuarios.add(crearUsuario);
 
         JMenu ayuda= new JMenu("Ayuda");
         JMenuItem comoCrear = new JMenuItem("Como crear usuarios?");
@@ -285,6 +296,9 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setJMenuBar(null);
+                for (int i = 0; i<usuarioInfo.length; i++){
+                    usuarioInfo[i] = null;
+                }
                 anterior = actual;
                 actual = "logIn";
                 limpiarVentana();
@@ -295,6 +309,15 @@ public class ExamenVentana extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 anterior = actual;
                 actual = "ModificarCuenta";
+                limpiarVentana();
+            }
+        });
+
+        crearUsuario.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                anterior = actual;
+                actual = "RegistrarUsuario";
                 limpiarVentana();
             }
         });
@@ -350,7 +373,7 @@ public class ExamenVentana extends JFrame {
         cambiarPassword.setLocation(100,430);
         pChangeData.add(cambiarPassword);
 
-        JTextField cambiarPasswordTF = new JTextField();
+        JPasswordField cambiarPasswordTF = new JPasswordField();
         cambiarPasswordTF.setSize(300,25);
         cambiarPasswordTF.setLocation(100,510);
         pChangeData.add(cambiarPasswordTF);
@@ -383,19 +406,25 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 File vacia = new File("src/users.txt");
+                boolean permisoVip = false;
+                if (cambiarCorreoTF.getText() == usuarioInfo[2]){
+                    System.out.println(permisoVip + "permisovip");
+                    permisoVip = true;
+                }
+                if ((leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false || permisoVip == true) && vacia.length() != 0){
 
-                if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false && vacia.length() != 0){
+                    System.out.println(usuarioInfo[0] + "En el actualizando");
                     JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
-                    if (datosAnteriores == null) {
-                        datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
-                    }
-                    datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+cambiarPasswordTF.getText();
+
+                    datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
+                    datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+new String(cambiarPasswordTF.getPassword());
+
                     actualizarDatos("src/users.txt", datosAnteriores, datosNuevos, contadorFilas("src/users.txt"));
                     datosAnteriores = datosNuevos;
                     usuarioInfo[0] = cambiarNombreTF.getText();
                     usuarioInfo[1] = cambiarApellidosTF.getText();
                     usuarioInfo[2] = cambiarCorreoTF.getText();
-                    usuarioInfo[3] = cambiarPasswordTF.getText();
+                    usuarioInfo[3] = new String(cambiarPasswordTF.getPassword());
                     bienvenidoNombre = usuarioInfo[0];
                     String bubble = anterior;
                     anterior = actual;
@@ -403,17 +432,153 @@ public class ExamenVentana extends JFrame {
                     limpiarVentana();
                 }
                 else if (vacia.length() == 0){
-                    JOptionPane.showMessageDialog(null,"yo no me llevo asi con usted","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada por alguna mañosada, reviertalo","mal:(!", JOptionPane.ERROR_MESSAGE);
 
                 }
                 else{
-                    JOptionPane.showMessageDialog(null,"El correo ingresado ya existe O","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
 
                 }
             }
         });
 
 
-        return  pChangeData;
+        return pChangeData;
+    }
+
+    JPanel pRegisterUser(){
+        JPanel pRegister = new JPanel();
+        pRegister.setSize(600,700);
+        pRegister.setLocation(50,50);
+        pRegister.setBackground(Color.green);
+        pRegister.setLayout(null);
+
+        JLabel nombre = new JLabel("Ingrese su nombre", JLabel.LEFT);
+        nombre.setBounds(215,180,200,40);
+        nombre.setFont(new Font("Arial", Font.BOLD, 14));
+        nombre.setForeground(new Color(67, 42, 42));
+        nombre.setVisible(true);
+        pRegister.add(nombre);
+
+        JTextField nombreTF = new JTextField("");
+        nombreTF.setBounds(215,220,200,40);
+        nombreTF.setVisible(true);
+        nombreTF.getBorder();
+        pRegister.add(nombreTF);
+
+        JLabel apellidos = new JLabel("Ingrese su apellido", JLabel.LEFT);
+        apellidos.setBounds(215,250,200,40);
+        apellidos.setFont(new Font("Arial", Font.BOLD, 14));
+        apellidos.setForeground(new Color(67, 42, 42));
+        apellidos.setVisible(true);
+        pRegister.add(apellidos);
+
+        JTextField apellidosTF = new JTextField("");
+        apellidosTF.setBounds(215,280,200,40);
+        apellidosTF.setVisible(true);
+        apellidosTF.getBorder();
+        pRegister.add(apellidosTF);
+
+        JLabel correo = new JLabel("Ingrese su correo", JLabel.LEFT);
+        correo.setBounds(215,310,200,40);
+        correo.setFont(new Font("Arial", Font.BOLD, 14));
+        correo.setForeground(new Color(67, 42, 42));
+        correo.setVisible(true);
+        pRegister.add(correo);
+
+        JTextField correoTF = new JTextField("");
+        correoTF.setBounds(215,340,200,40);
+        correoTF.setVisible(true);
+        correoTF.getBorder();
+        pRegister.add(correoTF);
+
+        JLabel passwordNew = new JLabel("Ingrese su contraseña", JLabel.LEFT);
+        passwordNew.setBounds(215,370,200,40);
+        passwordNew.setFont(new Font("Arial", Font.BOLD, 14));
+        passwordNew.setForeground(new Color(67, 42, 42));
+        passwordNew.setVisible(true);
+        pRegister.add(passwordNew);
+
+        JPasswordField passwordNewTF = new JPasswordField("");
+        passwordNewTF.setBounds(215,400,200,40);
+        passwordNewTF.setVisible(true);
+        passwordNewTF.getBorder();
+        pRegister.add(passwordNewTF);
+
+        JLabel passwordNew2 = new JLabel("Confirma tu contraseña", JLabel.LEFT);
+        passwordNew2.setBounds(215,430,200,40);
+        passwordNew2.setFont(new Font("Arial", Font.BOLD, 14));
+        passwordNew2.setForeground(new Color(67, 42, 42));
+        passwordNew2.setVisible(true);
+        pRegister.add(passwordNew2);
+
+        JPasswordField passwordNew2TF = new JPasswordField("");
+        passwordNew2TF.setBounds(215,460,200,40);
+        passwordNew2TF.setVisible(true);
+        passwordNew2TF.getBorder();
+        pRegister.add(passwordNew2TF);
+
+        JButton registrar = new JButton("Registrar");
+        registrar.setBounds(215,600,200,40);
+        registrar.setVisible(true);
+        pRegister.add(registrar);
+        String p, po;
+
+        registrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String pass1, pass2;
+                String nombreR = nombreTF.getText();
+                String apellidoR = apellidosTF.getText();
+                String correoR = correoTF.getText();
+                String cuentas [];
+                int registroR = 0;
+                pass1 = new String(passwordNewTF.getPassword());
+                pass2 = new String(passwordNew2TF.getPassword());
+                System.out.println(pass1);
+                System.out.println(pass2);
+                if(pass1.equals(pass2) && !pass1.equals("") && !pass2.equals("")){
+                    try {
+                        System.out.println("AQUIS");
+                        FileReader fileReader = new FileReader("src/users.txt");
+                        BufferedReader bufferedReader = new BufferedReader(fileReader);
+                        String linea;
+                        while ((linea = bufferedReader.readLine()) != null) {
+                            cuentas = linea.split(",");
+                            if (cuentas[2].equals(correoR)){
+                                registroR = 1;
+                            }
+                        }
+                        if (registroR == 0){
+                            try (FileWriter escritorArchivo = new FileWriter("src/users.txt", true);
+                                 BufferedWriter escritorBuffer = new BufferedWriter(escritorArchivo);
+                                 PrintWriter impresoraEScritora = new PrintWriter(escritorBuffer);)
+                            {
+                                impresoraEScritora.println(nombreR + "," + apellidoR + "," + correoR + "," + pass1);
+                                System.out.println("ola");
+                            } catch (IOException i) {
+                                i.printStackTrace();
+                            }
+                            JOptionPane.showMessageDialog(null,"Registro exitoso","BIEN(:!", JOptionPane.INFORMATION_MESSAGE);
+                            anterior = actual;
+                            actual = "logIn";
+                            limpiarVentana();
+                        }
+                        else{
+                            JOptionPane.showMessageDialog(null,"El correo ingresado ya se encuentra registrados","mal:(!", JOptionPane.ERROR_MESSAGE);
+                        }
+                        fileReader.close();
+                    } catch (IOException de) {
+                        de.printStackTrace();
+                    }
+
+
+                }
+                else{
+                    JOptionPane.showMessageDialog(null,"Las contrase;as no coinciden","mal:(!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        return pRegister;
     }
 }
