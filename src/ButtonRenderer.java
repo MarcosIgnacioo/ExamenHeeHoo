@@ -3,14 +3,11 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 class ButtonRenderer extends JButton implements TableCellRenderer {
-
     public ButtonRenderer() {
         setOpaque(true);
     }
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (isSelected) {
             setForeground(table.getSelectionForeground());
             setBackground(table.getSelectionBackground());
@@ -18,7 +15,7 @@ class ButtonRenderer extends JButton implements TableCellRenderer {
             setForeground(table.getForeground());
             setBackground(UIManager.getColor("Button.background"));
         }
-        setText((value == null) ? "sdaas" : value.toString());
+        setText((value == null) ? "X" : value.toString());
         return this;
     }
 }

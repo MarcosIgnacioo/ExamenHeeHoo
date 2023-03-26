@@ -9,62 +9,47 @@ import java.io.FileReader;
 import java.io.IOException;
 
 class ButtonEditor extends DefaultCellEditor {
-
-    protected JButton button;
+    protected JButton boton;
     private String label;
     private boolean isPushed;
-    static int popo = 1;
-    static int popolist[] = {1};
 
-    public ButtonEditor(JCheckBox checkBox, JTable tabla) {
+    public ButtonEditor(JCheckBox checkBox) {
         super(checkBox);
-        button = new JButton("a");
-        button.setOpaque(true);
-        System.out.println(popo);
-        popo++;
-        button.addActionListener(new ActionListener() {
-            @Override
+        boton = new JButton("X");
+        boton.setOpaque(true);
+        boton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ///AQUI BORRA LAS CHINGADERAS
-                tabla.getValueAt(0,0);
-                tabla.getSelectedRow();
-                System.out.println(
-                        tabla.getSelectedRows());
-                String cuentas[];
-
                 fireEditingStopped();
             }
         });
-    }
-
-    @Override
-    public Component getTableCellEditorComponent(JTable table, Object value,
-                                                 boolean isSelected, int row, int column) {
+    }public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
         if (isSelected) {
-            button.setForeground(table.getSelectionForeground());
-            button.setBackground(table.getSelectionBackground());
+            boton.setForeground(table.getSelectionForeground());
+            boton.setBackground(table.getSelectionBackground());
         } else {
-            button.setForeground(table.getForeground());
-            button.setBackground(table.getBackground());
+            boton.setForeground(table.getForeground());
+            boton.setBackground(table.getBackground());
         }
-        label = (value == null) ? "" : value.toString();
-        button.setText(label);
+        label = (value == null) ? "xx" : value.toString();
+        boton.setText(label);
         isPushed = true;
-        return button;
+        return boton;
     }
 
-    @Override
     public Object getCellEditorValue() {
         if (isPushed) {
-            JOptionPane.showMessageDialog(button, label + ": popo!");
+            JOptionPane.showMessageDialog(boton, label + ": Ouch!");
         }
         isPushed = false;
-        return label;
+        return new String(label);
     }
 
-    @Override
     public boolean stopCellEditing() {
         isPushed = false;
         return super.stopCellEditing();
+    }
+
+    protected void fireEditingStopped() {
+        super.fireEditingStopped();
     }
 }

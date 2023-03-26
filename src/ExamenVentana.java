@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ public class ExamenVentana extends JFrame {
     private String bienvenidoNombre = "";
     private static int usuarioId = 0;
     private static String usuarioInfo [] = new String[4];
+
 
 
     boolean leerParaCreer(String correo, int size){
@@ -134,7 +136,7 @@ public class ExamenVentana extends JFrame {
         this.revalidate();
     }
     public void limpiarVentana() {
-
+        actual="lista";
         if(panel!= null) {
             this.remove(panel);
         }
@@ -178,7 +180,115 @@ public class ExamenVentana extends JFrame {
             this.repaint();
             this.revalidate();
         }
+        if (actual.equals("lista")){
+            panel = listaUsuarios();
+            this.add(panel);
+            this.repaint();
+            this.revalidate();
+        }
     }
+
+    public String nombreUsuarios(){
+        String cuentas[];
+        String nombrecuentas="";
+
+
+        try {
+            FileReader fileReader = new FileReader("src/users.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                cuentas = linea.split(",");
+                nombrecuentas+=cuentas[0]+",";
+
+
+
+            }
+            fileReader.close();
+        } catch (IOException de) {
+            de.printStackTrace();
+        }
+        return nombrecuentas;
+    }
+
+    public JScrollPane tabla(){
+        String hola[]= new String[2];
+        hola[0]="Wep";
+        hola[1]="Si";
+        String hola2[]= new String[2];
+        hola2[0]="asd";
+        hola2[1]="Sasdi";
+
+        DefaultTableModel dfm = new DefaultTableModel();
+        dfm.addColumn("Usuario");
+        dfm.addColumn("Nombre");
+        dfm.addColumn("Acciones");
+        dfm.addRow(hola);
+        dfm.addRow(hola2);
+        JTable tablaUsers = new JTable(dfm);
+
+        TableColumn botonBorrar = tablaUsers.getColumnModel().getColumn(2);
+
+        botonBorrar.setCellRenderer(new ButtonRenderer());
+        botonBorrar.setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        JScrollPane panelTabla = new JScrollPane(tablaUsers);
+        getContentPane().add(panelTabla);
+        panelTabla.setSize(400,370);
+        panelTabla.setLocation(100,300);
+        setVisible(true);
+
+        return panelTabla;
+    }
+    public JPanel listaUsuarios () {
+        JPanel pLista = new JPanel();
+        pLista.setSize(600,700);
+        pLista.setLocation(50,50);
+        pLista.setBackground(Color.green);
+        pLista.setLayout(null);
+
+        JLabel list = new JLabel("Lista de usuarios");
+        list.setSize(250,30);
+        list.setLocation(180,100);
+        list.setFont(new Font("Roboto Slab", Font.BOLD,30));
+        pLista.add(list);
+
+        JLabel edittext = new JLabel("Editar");
+        edittext.setSize(100,20);
+        edittext.setLocation(100,200);
+        edittext.setFont(new Font("Roboto Slab", Font.BOLD,20));
+        pLista.add(edittext);
+
+
+        JComboBox cajanombres = new JComboBox();
+        cajanombres.setSize(400,30);
+        cajanombres.setLocation(100,225);
+        pLista.add(cajanombres);
+        String nombrescaja[];
+        nombrescaja = nombreUsuarios().split(",");
+
+        for(int i=0;i<nombrescaja.length;i++){
+            cajanombres.addItem(nombrescaja[i]);
+
+        }
+
+        JButton editar = new JButton("Editar");
+        editar.setSize(400,30);
+        editar.setLocation(100,260);
+        editar.setBackground(Color.blue);
+        editar.setForeground(Color.white);
+        pLista.add(editar);
+
+        pLista.add(tabla());
+
+
+
+
+
+        return pLista;
+    }
+
+
     public JPanel logInCambio (){
         JPanel pLogIn = new JPanel();
         pLogIn.setSize(600,700);
@@ -296,6 +406,15 @@ public class ExamenVentana extends JFrame {
         barraMenu.add(usuarios);
         barraMenu.add(ayuda);
         this.setJMenuBar(barraMenu);
+
+        listaDeUsuarios.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                anterior = actual;
+                actual = "lista";
+                limpiarVentana();
+            }
+        });
         cerrarSesion.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
