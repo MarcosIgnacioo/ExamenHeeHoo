@@ -32,7 +32,6 @@ public class ExamenVentana extends JFrame {
             int id = usuarioId;
             while ((linea = bufferedReader.readLine()) != null) {
                 cuentas = linea.split(",");
-
                 if (cuentas[2].equals(correo) && id !=contador){
                     correoExiste = true;
                 }
@@ -43,28 +42,6 @@ public class ExamenVentana extends JFrame {
             de.printStackTrace();
         }
         return correoExiste;
-    }
-
-    void leerParaCreer2(String correo, int size){
-        String userName, passwordConf;
-        String cuentas[] = new String[size];
-        int entro = 0;
-        String filePath = "src/users.txt";
-        boolean correoExiste = false;
-        try {
-            FileReader fileReader = new FileReader("src/users.txt");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String linea;
-            int contador = 0;
-            while ((linea = bufferedReader.readLine()) != null) {
-                cuentas = linea.split(",");
-                System.out.println(contador);
-                contador++;
-            }
-            fileReader.close();
-        } catch (IOException de) {
-            de.printStackTrace();
-        }
     }
 
     static void actualizarDatos(String archivo, String infoAnterior, String infoActual, int fileSize)
@@ -233,7 +210,6 @@ public class ExamenVentana extends JFrame {
                         cuentas = linea.split(",");
                         if (cuentas[0].equals(userName) && cuentas[3].equals(passwordConf)){
                             usuarioInfo = cuentas;
-                            System.out.println(usuarioInfo[0] + "Inicio de sesion");
                             bienvenidoNombre = userName;
                             entro = 1;
                         }
@@ -311,26 +287,32 @@ public class ExamenVentana extends JFrame {
         miCuenta.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                anterior = actual;
-                actual = "ModificarCuenta";
-                limpiarVentana();
+                if (actual != "ModificarCuenta"){
+                    anterior = actual;
+                    actual = "ModificarCuenta";
+                    limpiarVentana();
+                }
             }
         });
 
         crearUsuario.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (actual != "RegistrarUsuario"){
                 anterior = actual;
                 actual = "RegistrarUsuario";
                 limpiarVentana();
+                }
             }
         });
         comoCrear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (actual != "ComoCrearUsuario"){
                 anterior = actual;
                 actual = "ComoCrearUsuario";
                 limpiarVentana();
+                }
             }
         });
 
@@ -404,7 +386,6 @@ public class ExamenVentana extends JFrame {
         cancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(usuarioInfo[0]);
                 bienvenidoNombre = usuarioInfo[0];
                 String bubble = anterior;
                 anterior = actual;
@@ -417,10 +398,8 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 File vacia = new File("src/users.txt");
-                System.out.println(cambiarNombreTF.getText());
                 if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false && vacia.length() != 0 && !cambiarNombreTF.getText().equals("")&& !cambiarApellidosTF.getText().equals("")&& !cambiarCorreoTF.getText().equals("")&& !new String(cambiarPasswordTF.getPassword()).equals("")){
 
-                    System.out.println(usuarioInfo[0] + "En el actualizando");
                     JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
 
                     datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
@@ -559,8 +538,6 @@ public class ExamenVentana extends JFrame {
                 int registroR = 0;
                 pass1 = new String(passwordNewTF.getPassword());
                 pass2 = new String(passwordNew2TF.getPassword());
-                System.out.println(pass1);
-                System.out.println(pass2);
 
                 if (nombreR.equals("") || apellidoR.equals("") || correoR.equals("") || pass1.equals("") || pass2.equals("")){
                         JOptionPane.showMessageDialog(null,"Rellene todos los campos","mal:(!", JOptionPane.ERROR_MESSAGE);
@@ -569,7 +546,6 @@ public class ExamenVentana extends JFrame {
                 else{
                     if(pass1.equals(pass2) && !pass1.equals("") && !pass2.equals("")){
                         try {
-                            System.out.println("AQUIS");
                             FileReader fileReader = new FileReader("src/users.txt");
                             BufferedReader bufferedReader = new BufferedReader(fileReader);
                             String linea;
@@ -585,7 +561,6 @@ public class ExamenVentana extends JFrame {
                                      PrintWriter impresoraEScritora = new PrintWriter(escritorBuffer);)
                                 {
                                     impresoraEScritora.println(nombreR + "," + apellidoR + "," + correoR + "," + pass1);
-                                    System.out.println("ola");
                                 } catch (IOException i) {
                                     i.printStackTrace();
                                 }
@@ -615,7 +590,6 @@ public class ExamenVentana extends JFrame {
     }
 
     JPanel pComoRegistrarUsuario(){
-        System.out.println("ola");
         JPanel pComoRegistrar = new JPanel();
         pComoRegistrar.setSize(600,700);
         pComoRegistrar.setLocation(50,50);
