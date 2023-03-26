@@ -1,5 +1,5 @@
 nombre,apellido,correo,contra
-123,123,po2,contra
+123,123,pancho@gmail.com,3
 fgh,fgh,po23,fg
 543,45,po234,gh
 asd,asds,po,g

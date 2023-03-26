@@ -32,14 +32,11 @@ public class ExamenVentana extends JFrame {
             int id = usuarioId;
             while ((linea = bufferedReader.readLine()) != null) {
                 cuentas = linea.split(",");
-                System.out.println("userID: "+usuarioId);
-                System.out.println("correo a cambiar: " + correo);
-                System.out.println("correo actual en el ciclon: " + cuentas[2]);
-                if (cuentas[2].equals(correo)){
-                        correoExiste = true;
+
+                if (cuentas[2].equals(correo) && id !=contador){
+                    correoExiste = true;
                 }
                 contador++;
-                System.out.println(cuentas[2]);
             }
             fileReader.close();
         } catch (IOException de) {
@@ -170,6 +167,13 @@ public class ExamenVentana extends JFrame {
 
         if (actual.equals("RegistrarUsuario")){
             panel = pRegisterUser();
+            this.add(panel);
+            this.repaint();
+            this.revalidate();
+        }
+
+        if (actual.equals("ComoCrearUsuario")){
+            panel = pComoRegistrarUsuario();
             this.add(panel);
             this.repaint();
             this.revalidate();
@@ -321,7 +325,14 @@ public class ExamenVentana extends JFrame {
                 limpiarVentana();
             }
         });
-
+        comoCrear.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                anterior = actual;
+                actual = "ComoCrearUsuario";
+                limpiarVentana();
+            }
+        });
 
         this.add(pLoggedIn);
         return pLoggedIn;
@@ -406,12 +417,8 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 File vacia = new File("src/users.txt");
-                boolean permisoVip = false;
-                if (cambiarCorreoTF.getText() == usuarioInfo[2]){
-                    System.out.println(permisoVip + "permisovip");
-                    permisoVip = true;
-                }
-                if ((leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false || permisoVip == true) && vacia.length() != 0){
+                System.out.println(cambiarNombreTF.getText());
+                if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false && vacia.length() != 0 && !cambiarNombreTF.getText().equals("")&& !cambiarApellidosTF.getText().equals("")&& !cambiarCorreoTF.getText().equals("")&& !new String(cambiarPasswordTF.getPassword()).equals("")){
 
                     System.out.println(usuarioInfo[0] + "En el actualizando");
                     JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
@@ -430,6 +437,9 @@ public class ExamenVentana extends JFrame {
                     anterior = actual;
                     actual = bubble;
                     limpiarVentana();
+                }
+                else if (cambiarNombreTF.getText().equals("") || cambiarApellidosTF.getText().equals("")|| cambiarCorreoTF.getText().equals("")|| new String(cambiarPasswordTF.getPassword()).equals("")){
+                    JOptionPane.showMessageDialog(null,"Rellene todos los campos","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
                 else if (vacia.length() == 0){
                     JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada por alguna mañosada, reviertalo","mal:(!", JOptionPane.ERROR_MESSAGE);
@@ -518,11 +528,25 @@ public class ExamenVentana extends JFrame {
         passwordNew2TF.getBorder();
         pRegister.add(passwordNew2TF);
 
+        JButton cancelar = new JButton("Cancelar");
+        cancelar.setBounds(100,600,200,40);
+        cancelar.setVisible(true);
+        pRegister.add(cancelar);
+
         JButton registrar = new JButton("Registrar");
-        registrar.setBounds(215,600,200,40);
+        registrar.setBounds(300,600,200,40);
         registrar.setVisible(true);
         pRegister.add(registrar);
-        String p, po;
+
+        cancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String bubble = anterior;
+                anterior = actual;
+                actual = bubble;
+                limpiarVentana();
+            }
+        });
 
         registrar.addActionListener(new ActionListener() {
             @Override
@@ -537,48 +561,105 @@ public class ExamenVentana extends JFrame {
                 pass2 = new String(passwordNew2TF.getPassword());
                 System.out.println(pass1);
                 System.out.println(pass2);
-                if(pass1.equals(pass2) && !pass1.equals("") && !pass2.equals("")){
-                    try {
-                        System.out.println("AQUIS");
-                        FileReader fileReader = new FileReader("src/users.txt");
-                        BufferedReader bufferedReader = new BufferedReader(fileReader);
-                        String linea;
-                        while ((linea = bufferedReader.readLine()) != null) {
-                            cuentas = linea.split(",");
-                            if (cuentas[2].equals(correoR)){
-                                registroR = 1;
-                            }
-                        }
-                        if (registroR == 0){
-                            try (FileWriter escritorArchivo = new FileWriter("src/users.txt", true);
-                                 BufferedWriter escritorBuffer = new BufferedWriter(escritorArchivo);
-                                 PrintWriter impresoraEScritora = new PrintWriter(escritorBuffer);)
-                            {
-                                impresoraEScritora.println(nombreR + "," + apellidoR + "," + correoR + "," + pass1);
-                                System.out.println("ola");
-                            } catch (IOException i) {
-                                i.printStackTrace();
-                            }
-                            JOptionPane.showMessageDialog(null,"Registro exitoso","BIEN(:!", JOptionPane.INFORMATION_MESSAGE);
-                            anterior = actual;
-                            actual = "logIn";
-                            limpiarVentana();
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null,"El correo ingresado ya se encuentra registrados","mal:(!", JOptionPane.ERROR_MESSAGE);
-                        }
-                        fileReader.close();
-                    } catch (IOException de) {
-                        de.printStackTrace();
-                    }
 
-
+                if (nombreR.equals("") || apellidoR.equals("") || correoR.equals("") || pass1.equals("") || pass2.equals("")){
+                        JOptionPane.showMessageDialog(null,"Rellene todos los campos","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
+
                 else{
-                    JOptionPane.showMessageDialog(null,"Las contrase;as no coinciden","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    if(pass1.equals(pass2) && !pass1.equals("") && !pass2.equals("")){
+                        try {
+                            System.out.println("AQUIS");
+                            FileReader fileReader = new FileReader("src/users.txt");
+                            BufferedReader bufferedReader = new BufferedReader(fileReader);
+                            String linea;
+                            while ((linea = bufferedReader.readLine()) != null) {
+                                cuentas = linea.split(",");
+                                if (cuentas[2].equals(correoR)){
+                                    registroR = 1;
+                                }
+                            }
+                            if (registroR == 0){
+                                try (FileWriter escritorArchivo = new FileWriter("src/users.txt", true);
+                                     BufferedWriter escritorBuffer = new BufferedWriter(escritorArchivo);
+                                     PrintWriter impresoraEScritora = new PrintWriter(escritorBuffer);)
+                                {
+                                    impresoraEScritora.println(nombreR + "," + apellidoR + "," + correoR + "," + pass1);
+                                    System.out.println("ola");
+                                } catch (IOException i) {
+                                    i.printStackTrace();
+                                }
+                                JOptionPane.showMessageDialog(null,"Registro exitoso","BIEN(:!", JOptionPane.INFORMATION_MESSAGE);
+                                anterior = actual;
+                                actual = "logIn";
+                                limpiarVentana();
+                            }
+                            else{
+                                JOptionPane.showMessageDialog(null,"El correo ingresado ya se encuentra registrado","mal:(!", JOptionPane.ERROR_MESSAGE);
+                            }
+                            fileReader.close();
+                        } catch (IOException de) {
+                            de.printStackTrace();
+                        }
+
+
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null,"Las contrase;as no coinciden","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
-            }
-        });
+                }
+            });
         return pRegister;
+    }
+
+    JPanel pComoRegistrarUsuario(){
+        System.out.println("ola");
+        JPanel pComoRegistrar = new JPanel();
+        pComoRegistrar.setSize(600,700);
+        pComoRegistrar.setLocation(50,50);
+        pComoRegistrar.setBackground(Color.magenta);
+        pComoRegistrar.setLayout(null);
+
+            JLabel comoCrearUserLabel = new JLabel("   ¿Como crear usuario?", JLabel.CENTER);
+            comoCrearUserLabel.setFont(new Font("Arial",Font.BOLD, 24));
+            comoCrearUserLabel.setSize(500,200);
+            comoCrearUserLabel.setLocation(10,0);
+            pComoRegistrar.add(comoCrearUserLabel);
+
+            JButton crearUsuarioAhoraBoton = new JButton("Crear un usuario ahora");
+            crearUsuarioAhoraBoton.setFont(new Font("Arial",Font.BOLD, 14));
+            crearUsuarioAhoraBoton.setLocation(180,390);
+            crearUsuarioAhoraBoton.setSize(200,40);
+            pComoRegistrar.add(crearUsuarioAhoraBoton);
+
+            crearUsuarioAhoraBoton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    anterior = actual;
+                    actual = "RegistrarUsuario";
+                    limpiarVentana();
+                }
+            });
+
+            JTextArea comoCrearTA = new JTextArea();
+            comoCrearTA.setText("\n    1.- Hacer click en la opción 'usuarios' " +
+                                "\n    en el menú superior" +
+                                "\n"+
+                                "\n    2.- Hacer click en el menu desplegado" +
+                                "\n"+
+                                "\n    3.- Llenar los campos solicitados" +
+                                "\n"+
+                                "\n    4.- Hacer click en 'Crear usuario'" +
+                                "\n"+
+                                "\n    8.- Listo, el usuario se ha creado");
+            comoCrearTA.setSize(325,300);
+            comoCrearTA.setFont(new Font("Arial", Font.BOLD, 16));
+            comoCrearTA.setEditable(false);
+            comoCrearTA.setLocation(120,150);
+            pComoRegistrar.add(comoCrearTA);
+
+
+        return pComoRegistrar;
     }
 }
