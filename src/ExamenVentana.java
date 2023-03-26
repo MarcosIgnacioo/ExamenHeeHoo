@@ -590,6 +590,7 @@ public class ExamenVentana extends JFrame {
                                     i.printStackTrace();
                                 }
                                 JOptionPane.showMessageDialog(null,"Registro exitoso","BIEN(:!", JOptionPane.INFORMATION_MESSAGE);
+                                setJMenuBar(null);
                                 anterior = actual;
                                 actual = "logIn";
                                 limpiarVentana();
