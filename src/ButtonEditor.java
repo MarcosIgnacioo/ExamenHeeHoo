@@ -58,7 +58,7 @@ class ButtonEditor extends DefaultCellEditor {
                         inputFile.delete();
                         tempFile.renameTo(inputFile);
 
-                        JOptionPane.showMessageDialog(null, "La fila se ha eliminado correctamente");
+                        JOptionPane.showMessageDialog(null, "El perfil se ha eliminado correctamente");
                     } catch (FileNotFoundException ex) {
                         JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename + "'");
                         ex.printStackTrace();
@@ -91,7 +91,7 @@ class ButtonEditor extends DefaultCellEditor {
 
     public Object getCellEditorValue() {
         if (isPushed) {
-            JOptionPane.showMessageDialog(button, label + ": Ouch!");
+
         }
         isPushed = false;
         return new String(label);

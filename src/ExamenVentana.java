@@ -1,3 +1,5 @@
+import org.w3c.dom.CDATASection;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -101,7 +103,7 @@ public class ExamenVentana extends JFrame {
         }
     }
     public ExamenVentana() throws InterruptedException {
-        this.getContentPane().setBackground(Color.ORANGE);
+
         this.setVisible(true);
         this.setSize(700,900);
         this.setLocationRelativeTo(null);
@@ -218,35 +220,32 @@ public class ExamenVentana extends JFrame {
 
         JScrollPane panelTabla = new JScrollPane(tablaUsers);
         getContentPane().add(panelTabla);
-        panelTabla.setSize(400,370);
-        panelTabla.setLocation(100,300);
+        panelTabla.setBounds(76, 267, 340, 401);
         setVisible(true);
 
         return panelTabla;
     }
     public JPanel listaUsuarios () {
         JPanel pLista = new JPanel();
-        pLista.setSize(600,700);
-        pLista.setLocation(50,50);
-        pLista.setBackground(Color.green);
+        pLista.setSize(507,732);
+        pLista.setLocation(91,61);
+        pLista.setBackground(new Color(0, 255, 127));
         pLista.setLayout(null);
 
         JLabel list = new JLabel("Lista de usuarios");
-        list.setSize(250,30);
-        list.setLocation(180,100);
-        list.setFont(new Font("Roboto Slab", Font.BOLD,30));
+        list.setBounds(109, 91, 283, 46);
+        list.setHorizontalAlignment(SwingConstants.CENTER);
+        list.setFont(new Font("Arial", Font.BOLD,25));
         pLista.add(list);
 
         JLabel edittext = new JLabel("Editar");
-        edittext.setSize(100,20);
-        edittext.setLocation(100,200);
-        edittext.setFont(new Font("Roboto Slab", Font.BOLD,20));
+        edittext.setBounds(76, 135, 188, 34);
+        edittext.setFont(new Font("Arial", Font.BOLD,18));
         pLista.add(edittext);
 
 
         JComboBox cajanombres = new JComboBox();
-        cajanombres.setSize(400,30);
-        cajanombres.setLocation(100,225);
+        cajanombres.setBounds(76, 168, 340, 34);
         pLista.add(cajanombres);
         String nombrescaja[];
         nombrescaja = nombreUsuarios().split(",");
@@ -256,13 +255,18 @@ public class ExamenVentana extends JFrame {
 
         }
 
-        JButton editar = new JButton("Editar");
-        editar.setSize(400,30);
-        editar.setLocation(100,260);
-        editar.setBackground(Color.blue);
-        editar.setForeground(Color.white);
+        JButton editar = new JButton("Editar a "+cajanombres.getSelectedItem().toString());
+        editar.setBounds(76, 213, 340, 34);
+        editar.setFont(new Font("Arial", Font.BOLD, 18));
+        editar.setBackground(new Color(0, 255, 0));
         pLista.add(editar);
 
+        cajanombres.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
+            }
+        });
         pLista.add(tabla());
 
 
@@ -275,39 +279,45 @@ public class ExamenVentana extends JFrame {
 
     public JPanel logInCambio (){
         JPanel pLogIn = new JPanel();
-        pLogIn.setSize(600,700);
-        pLogIn.setLocation(50,50);
-        pLogIn.setBackground(Color.CYAN);
+        pLogIn.setSize(507,732);
+        pLogIn.setLocation(91,61);
+        pLogIn.setBackground(new Color(0, 255, 127));
         pLogIn.setLayout(null);
 
 
-        JLabel enterUser = new JLabel("Ingrese su usuario", JLabel.LEFT);
-        enterUser.setBounds(200,180,200,40);
-        enterUser.setFont(new Font("Arial", Font.BOLD, 14));
+        JLabel acceder = new JLabel("Accede a tu cuenta");
+        acceder.setFont(new Font("Arial", Font.PLAIN, 25));
+        acceder.setHorizontalAlignment(SwingConstants.CENTER);
+        acceder.setBounds(112, 60, 283, 148);
+        pLogIn.add(acceder);
+
+        JLabel enterUser = new JLabel("Ingrese su correo", JLabel.LEFT);
+        enterUser.setBounds(76, 304, 156, 34);
+        enterUser.setFont(new Font("Arial", Font.PLAIN, 17));
         enterUser.setForeground(new Color(67, 42, 42));
         enterUser.setVisible(true);
         pLogIn.add(enterUser);
 
         JTextField usuarioTF = new JTextField("nombre");
-        usuarioTF.setBounds(200,220,200,40);
+        usuarioTF.setBounds(76, 337, 348, 34);
         usuarioTF.setVisible(true);
         usuarioTF.getBorder();
         pLogIn.add(usuarioTF);
 
         JLabel enterPass = new JLabel("Ingrese su contraseña", JLabel.LEFT);
-        enterPass.setBounds(200,270,200,40);
-        enterPass.setFont(new Font("Arial", Font.BOLD, 14));
+        enterPass.setBounds(76, 375, 188, 34);
+        enterPass.setFont(new Font("Arial", Font.PLAIN, 17));
         enterPass.setForeground(new Color(67, 42, 42));
         enterPass.setVisible(true);
         pLogIn.add(enterPass);
 
         JPasswordField passwordTF = new JPasswordField("contra");
-        passwordTF.setBounds(200,300,200,40);
+        passwordTF.setBounds(76, 414, 348, 34);
         passwordTF.setVisible(true);
         pLogIn.add(passwordTF);
 
         JButton logIn = new JButton("Acceder");
-        logIn.setBounds(200, 370, 150,40);
+        logIn.setBounds(132, 507, 247, 61);
         logIn.setVisible(true);
         pLogIn.add(logIn);
 
@@ -333,10 +343,10 @@ public class ExamenVentana extends JFrame {
                     }
 
                     if (entro == 0){
-                        JOptionPane.showMessageDialog(enterPass,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"Datos incorrectos","mal:(!", JOptionPane.ERROR_MESSAGE);
                     }
                     else{
-                        JOptionPane.showMessageDialog(enterPass,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"Ingresando al sistema","Bien!", JOptionPane.INFORMATION_MESSAGE);
                         anterior = actual;
                         actual = "loggedIn";
                         limpiarVentana();
@@ -353,15 +363,15 @@ public class ExamenVentana extends JFrame {
     }
     public JPanel loggedInCambio (){
         JPanel pLoggedIn = new JPanel();
-        pLoggedIn.setSize(600,700);
-        pLoggedIn.setLocation(50,50);
-        pLoggedIn.setBackground(Color.pink);
+        pLoggedIn.setSize(507,732);
+        pLoggedIn.setLocation(91,61);
+        pLoggedIn.setBackground(new Color(0, 255, 127));
         pLoggedIn.setLayout(null);
 
         JLabel bienvenido = new JLabel("Hola " +bienvenidoNombre); // ver como actualizar el nombre cuando se cambia el usuario
-        bienvenido.setSize(400,30);
+        bienvenido.setBounds(113, 123, 283, 148);
         bienvenido.setFont(new Font("Arial", Font.BOLD, 24));
-        bienvenido.setLocation(0,0);
+        bienvenido.setHorizontalAlignment(SwingConstants.CENTER);
         bienvenido.setVisible(true);
         pLoggedIn.add(bienvenido);
 
@@ -447,66 +457,96 @@ public class ExamenVentana extends JFrame {
     }
     public JPanel modificarCuenta (){
 
+
+
         JPanel pChangeData = new JPanel();
-        pChangeData.setSize(600,700);
-        pChangeData.setLocation(50,50);
-        pChangeData.setBackground(Color.yellow);
+        pChangeData.setSize(507,732);
+        pChangeData.setLocation(91,61);
+        pChangeData.setBackground(new Color(0, 255, 127));
         pChangeData.setLayout(null);
         this.add(pChangeData);
 
+
+        JLabel micuenta = new JLabel("Mi cuenta personal");
+        micuenta.setFont(new Font("Arial", Font.BOLD, 25));
+        micuenta.setHorizontalAlignment(SwingConstants.CENTER);
+        micuenta.setBounds(76, 70, 359, 46);
+        pChangeData.add(micuenta);
+
+        JLabel cuentaimagen = new JLabel("");
+        cuentaimagen.setHorizontalAlignment(SwingConstants.CENTER);
+        cuentaimagen.setHorizontalTextPosition(SwingConstants.CENTER);
+        cuentaimagen.setIcon(new ImageIcon("src/cuenta.png"));
+        cuentaimagen.setBackground(new Color(255, 255, 255));
+        cuentaimagen.setBounds(166, 127, 173, 108);
+        pChangeData.add(cuentaimagen);
+
         JLabel cambiarNombre = new JLabel("Nombre:");
-        cambiarNombre.setSize(100,100);
-        cambiarNombre.setLocation(100,100);
+        cambiarNombre.setForeground(new Color(0, 0, 0));
+        cambiarNombre.setHorizontalAlignment(SwingConstants.LEFT);
+        cambiarNombre.setFont(new Font("Arial", Font.BOLD, 18));
+        cambiarNombre.setBounds(76, 246, 188, 34);
         pChangeData.add(cambiarNombre);
 
         JTextField cambiarNombreTF = new JTextField(50);
-        cambiarNombreTF.setSize(300,25);
-        cambiarNombreTF.setLocation(100,180);
+        cambiarNombreTF.setBounds(76, 277, 348, 34);
         pChangeData.add(cambiarNombreTF);
 
 
         JLabel cambiarApellidos = new JLabel("Apellidos:");
-        cambiarApellidos.setSize(100,100);
-        cambiarApellidos.setLocation(100,225);
+        cambiarApellidos.setHorizontalAlignment(SwingConstants.LEFT);
+        cambiarApellidos.setForeground(Color.BLACK);
+        cambiarApellidos.setFont(new Font("Arial", Font.BOLD, 18));
+        cambiarApellidos.setBounds(76, 328, 188, 34);
         pChangeData.add(cambiarApellidos);
 
         JTextField cambiarApellidosTF = new JTextField();
-        cambiarApellidosTF.setSize(300,25);
-        cambiarApellidosTF.setLocation(100,305);
+        cambiarApellidosTF.setBounds(76, 362, 348, 34);
         pChangeData.add(cambiarApellidosTF);
 
 
         JLabel cambiarCorreo = new JLabel("Correo:");
-        cambiarCorreo.setSize(100,100);
-        cambiarCorreo.setLocation(100,330);
+        cambiarCorreo.setHorizontalAlignment(SwingConstants.LEFT);
+        cambiarCorreo.setForeground(Color.BLACK);
+        cambiarCorreo.setFont(new Font("Arial", Font.BOLD, 18));
+        cambiarCorreo.setBounds(76, 407, 188, 34);
         pChangeData.add(cambiarCorreo);
 
         JTextField cambiarCorreoTF = new JTextField();
-        cambiarCorreoTF.setSize(300,25);
-        cambiarCorreoTF.setLocation(100,405);
+        cambiarCorreoTF.setBounds(76, 442, 348, 34);
         pChangeData.add(cambiarCorreoTF);
 
 
-        JLabel cambiarPassword = new JLabel("Contrasena:");
-        cambiarPassword.setSize(100,100);
-        cambiarPassword.setLocation(100,430);
+        JLabel cambiarPassword = new JLabel("Contraseña:");
+        cambiarPassword.setHorizontalAlignment(SwingConstants.LEFT);
+        cambiarPassword.setForeground(Color.BLACK);
+        cambiarPassword.setFont(new Font("Arial", Font.BOLD, 18));
+        cambiarPassword.setBounds(76, 487, 188, 34);
         pChangeData.add(cambiarPassword);
 
         JPasswordField cambiarPasswordTF = new JPasswordField();
-        cambiarPasswordTF.setSize(300,25);
-        cambiarPasswordTF.setLocation(100,510);
+        cambiarPasswordTF.setBounds(76, 519, 348, 34);
         pChangeData.add(cambiarPasswordTF);
 
 
         JButton cancelar = new JButton("Cancelar");
-        cancelar.setSize(200,50);
-        cancelar.setLocation(90,560);
+        cancelar.setFont(new Font("Arial", Font.BOLD, 11));
+        cancelar.setBorderPainted(false);
+        cancelar.setBackground(Color.RED);
+        cancelar.setBounds(76, 575, 173, 34);
         pChangeData.add(cancelar);
 
         JButton actualizar = new JButton("Actualizar");
-        actualizar.setSize(200,50);
-        actualizar.setLocation(310,560);
+        actualizar.setFont(new Font("Arial", Font.BOLD, 11));
+        actualizar.setBorderPainted(false);
+        actualizar.setBackground(new Color(50, 205, 50));
+        actualizar.setBounds(251, 575,173, 34);
         pChangeData.add(actualizar);
+
+        JPanel fondo = new JPanel();
+        fondo.setBackground(new Color(60, 179, 113));
+        fondo.setBounds(61, 246, 377, 393);
+        pChangeData.add(fondo);
 
         // acciones de botones
         cancelar.addActionListener(new ActionListener() {
@@ -563,86 +603,114 @@ public class ExamenVentana extends JFrame {
 
     JPanel pRegisterUser(){
         JPanel pRegister = new JPanel();
-        pRegister.setSize(600,700);
-        pRegister.setLocation(50,50);
-        pRegister.setBackground(Color.green);
+        pRegister.setSize(507,732);
+        pRegister.setLocation(91,61);
+        pRegister.setBackground(new Color(0, 255, 127));
         pRegister.setLayout(null);
 
-        JLabel nombre = new JLabel("Ingrese su nombre", JLabel.LEFT);
-        nombre.setBounds(215,180,200,40);
-        nombre.setFont(new Font("Arial", Font.BOLD, 14));
-        nombre.setForeground(new Color(67, 42, 42));
+        JLabel crearrrr = new JLabel("Crear usuario");
+        crearrrr.setFont(new Font("Arial", Font.BOLD, 25));
+        crearrrr.setHorizontalAlignment(SwingConstants.CENTER);
+        crearrrr.setBounds(110, 50, 283, 46);
+        pRegister.add(crearrrr);
+
+        JLabel userrr = new JLabel("");
+        userrr.setIcon(new ImageIcon("src/crearr.png"));
+        userrr.setBounds(188, 107, 110, 133);
+        pRegister.add(userrr);
+
+        JLabel nombre = new JLabel("Nombre:", JLabel.LEFT);
+        nombre.setForeground(new Color(0, 0, 0));
+        nombre.setHorizontalAlignment(SwingConstants.LEFT);
+        nombre.setFont(new Font("Arial", Font.BOLD, 18));
+        nombre.setBounds(76, 246, 188, 34);
         nombre.setVisible(true);
         pRegister.add(nombre);
 
         JTextField nombreTF = new JTextField("");
-        nombreTF.setBounds(215,220,200,40);
+        nombreTF.setBounds(76, 277, 348, 34);
         nombreTF.setVisible(true);
         nombreTF.getBorder();
         pRegister.add(nombreTF);
 
-        JLabel apellidos = new JLabel("Ingrese su apellido", JLabel.LEFT);
-        apellidos.setBounds(215,250,200,40);
-        apellidos.setFont(new Font("Arial", Font.BOLD, 14));
-        apellidos.setForeground(new Color(67, 42, 42));
+        JLabel apellidos = new JLabel("Apellidos:", JLabel.LEFT);
+        apellidos.setHorizontalAlignment(SwingConstants.LEFT);
+        apellidos.setForeground(Color.BLACK);
+        apellidos.setFont(new Font("Arial", Font.BOLD, 18));
+        apellidos.setBounds(76, 328, 188, 34);
         apellidos.setVisible(true);
         pRegister.add(apellidos);
 
         JTextField apellidosTF = new JTextField("");
-        apellidosTF.setBounds(215,280,200,40);
+        apellidosTF.setBounds(76,362,348,34);
         apellidosTF.setVisible(true);
         apellidosTF.getBorder();
         pRegister.add(apellidosTF);
 
-        JLabel correo = new JLabel("Ingrese su correo", JLabel.LEFT);
-        correo.setBounds(215,310,200,40);
-        correo.setFont(new Font("Arial", Font.BOLD, 14));
-        correo.setForeground(new Color(67, 42, 42));
+        JLabel correo = new JLabel("Correo:", JLabel.LEFT);
+        correo.setHorizontalAlignment(SwingConstants.LEFT);
+        correo.setForeground(Color.BLACK);
+        correo.setFont(new Font("Arial", Font.BOLD, 18));
+        correo.setBounds(76, 407, 188, 34);
         correo.setVisible(true);
         pRegister.add(correo);
 
         JTextField correoTF = new JTextField("");
-        correoTF.setBounds(215,340,200,40);
+        correoTF.setBounds(76, 442, 348, 34);
         correoTF.setVisible(true);
         correoTF.getBorder();
         pRegister.add(correoTF);
 
-        JLabel passwordNew = new JLabel("Ingrese su contraseña", JLabel.LEFT);
-        passwordNew.setBounds(215,370,200,40);
-        passwordNew.setFont(new Font("Arial", Font.BOLD, 14));
-        passwordNew.setForeground(new Color(67, 42, 42));
+        JLabel passwordNew = new JLabel("Contraseña:", JLabel.LEFT);
+        passwordNew.setHorizontalAlignment(SwingConstants.LEFT);
+        passwordNew.setForeground(Color.BLACK);
+        passwordNew.setFont(new Font("Arial", Font.BOLD, 18));
+        passwordNew.setBounds(76, 487, 188, 34);
         passwordNew.setVisible(true);
         pRegister.add(passwordNew);
 
         JPasswordField passwordNewTF = new JPasswordField("");
-        passwordNewTF.setBounds(215,400,200,40);
+        passwordNewTF.setBounds(76, 519, 348, 34);
         passwordNewTF.setVisible(true);
         passwordNewTF.getBorder();
         pRegister.add(passwordNewTF);
 
-        JLabel passwordNew2 = new JLabel("Confirma tu contraseña", JLabel.LEFT);
-        passwordNew2.setBounds(215,430,200,40);
-        passwordNew2.setFont(new Font("Arial", Font.BOLD, 14));
-        passwordNew2.setForeground(new Color(67, 42, 42));
+        JLabel passwordNew2 = new JLabel("Confirmar contraseña:", JLabel.LEFT);
+        passwordNew2.setHorizontalAlignment(SwingConstants.LEFT);
+        passwordNew2.setForeground(Color.BLACK);
+        passwordNew2.setFont(new Font("Arial", Font.BOLD, 18));
+        passwordNew2.setBounds(76, 558, 211, 34);
         passwordNew2.setVisible(true);
         pRegister.add(passwordNew2);
 
         JPasswordField passwordNew2TF = new JPasswordField("");
-        passwordNew2TF.setBounds(215,460,200,40);
+        passwordNew2TF.setBounds(76, 586, 348, 34);
         passwordNew2TF.setVisible(true);
         passwordNew2TF.getBorder();
         pRegister.add(passwordNew2TF);
 
         JButton cancelar = new JButton("Cancelar");
-        cancelar.setBounds(100,600,200,40);
+        cancelar.setBorderPainted(false);
+        cancelar.setForeground(Color.BLACK);
+        cancelar.setFont(new Font("Arial", Font.BOLD, 11));
+        cancelar.setBackground(new Color(255, 0, 0));
+        cancelar.setBounds(76, 652, 173, 34);
         cancelar.setVisible(true);
         pRegister.add(cancelar);
 
         JButton registrar = new JButton("Registrar");
-        registrar.setBounds(300,600,200,40);
+        registrar.setBackground(new Color(50, 205, 50));
+        registrar.setFont(new Font("Arial", Font.BOLD, 11));
+        registrar.setBorderPainted(false);
+        registrar.setBounds(252, 652, 173, 34);
         registrar.setVisible(true);
         pRegister.add(registrar);
 
+        JPanel panel_1 = new JPanel();
+        panel_1.setBackground(new Color(60, 179, 113));
+        panel_1.setBounds(42, 230, 421, 491);
+        panel_1.setLayout(null);
+        pRegister.add(panel_1);
         cancelar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -717,22 +785,23 @@ public class ExamenVentana extends JFrame {
 
     JPanel pComoRegistrarUsuario(){
         JPanel pComoRegistrar = new JPanel();
-        pComoRegistrar.setSize(600,700);
-        pComoRegistrar.setLocation(50,50);
-        pComoRegistrar.setBackground(Color.magenta);
+        pComoRegistrar.setSize(507,732);
+        pComoRegistrar.setLocation(91,61);
+        pComoRegistrar.setBackground(new Color(0, 255, 127));
         pComoRegistrar.setLayout(null);
 
-            JLabel comoCrearUserLabel = new JLabel("   ¿Como crear usuario?", JLabel.CENTER);
-            comoCrearUserLabel.setFont(new Font("Arial",Font.BOLD, 24));
-            comoCrearUserLabel.setSize(500,200);
-            comoCrearUserLabel.setLocation(10,0);
-            pComoRegistrar.add(comoCrearUserLabel);
+        JLabel comoCrearUserLabel = new JLabel("¿Como crear usuario?");
+        comoCrearUserLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        comoCrearUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        comoCrearUserLabel.setBounds(75, 165, 359, 46);
+        pComoRegistrar.add(comoCrearUserLabel);
 
-            JButton crearUsuarioAhoraBoton = new JButton("Crear un usuario ahora");
-            crearUsuarioAhoraBoton.setFont(new Font("Arial",Font.BOLD, 14));
-            crearUsuarioAhoraBoton.setLocation(180,390);
-            crearUsuarioAhoraBoton.setSize(200,40);
-            pComoRegistrar.add(crearUsuarioAhoraBoton);
+        JButton crearUsuarioAhoraBoton = new JButton("Crear un usuario ahora");
+        crearUsuarioAhoraBoton.setFont(new Font("Arial", Font.BOLD, 13));
+        crearUsuarioAhoraBoton.setBounds(144, 500, 219, 34);
+        crearUsuarioAhoraBoton.setBackground(new Color(50, 205, 50));
+        pComoRegistrar.add(crearUsuarioAhoraBoton);
+
 
             crearUsuarioAhoraBoton.addActionListener(new ActionListener() {
                 @Override
@@ -742,23 +811,24 @@ public class ExamenVentana extends JFrame {
                     limpiarVentana();
                 }
             });
+        JTextArea comoCrearTA = new JTextArea();
+        comoCrearTA.setText("\n    1.- Hacer click en la opción 'usuarios' " +
+                            "\n    en el menú superior" +
+                            "\n"+
+                            "\n    2.- Hacer click en 'Crear usuario'" +
+                            "\n"+
+                            "\n    3.- Llenar los campos solicitados" +
+                            "\n"+
+                            "\n    4.- Hacer click en 'Registrar'" +
+                            "\n"+
+                            "\n    8.- Listo, el usuario se ha creado");
 
-            JTextArea comoCrearTA = new JTextArea();
-            comoCrearTA.setText("\n    1.- Hacer click en la opción 'usuarios' " +
-                                "\n    en el menú superior" +
-                                "\n"+
-                                "\n    2.- Hacer click en el menu desplegado" +
-                                "\n"+
-                                "\n    3.- Llenar los campos solicitados" +
-                                "\n"+
-                                "\n    4.- Hacer click en 'Crear usuario'" +
-                                "\n"+
-                                "\n    8.- Listo, el usuario se ha creado");
-            comoCrearTA.setSize(325,300);
-            comoCrearTA.setFont(new Font("Arial", Font.BOLD, 16));
-            comoCrearTA.setEditable(false);
-            comoCrearTA.setLocation(120,150);
-            pComoRegistrar.add(comoCrearTA);
+        comoCrearTA.setFont(new Font("Arial", Font.BOLD, 18));
+        comoCrearTA.setEditable(false);
+        comoCrearTA.setBounds(76, 225, 353, 296);
+        comoCrearTA.setBackground(new Color(0, 255, 127));
+
+        pComoRegistrar.add(comoCrearTA);
 
 
         return pComoRegistrar;
