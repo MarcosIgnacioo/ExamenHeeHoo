@@ -18,8 +18,7 @@ public class ExamenVentana extends JFrame {
     private static int usuarioId = 0;
     private static String usuarioInfo [] = new String[4];
 
-
-
+    private int numcuenta[];
     boolean leerParaCreer(String correo, int size){
         String userName, passwordConf;
         String cuentas[] = new String[size];
@@ -113,7 +112,7 @@ public class ExamenVentana extends JFrame {
         this.revalidate();
     }
     public void limpiarVentana() {
-        actual="lista";
+      //  actual="lista";
         if(panel!= null) {
             this.remove(panel);
         }
@@ -189,19 +188,27 @@ public class ExamenVentana extends JFrame {
     }
 
     public JScrollPane tabla(){
-        String hola[]= new String[2];
-        hola[0]="Wep";
-        hola[1]="Si";
-        String hola2[]= new String[2];
-        hola2[0]="asd";
-        hola2[1]="Sasdi";
-
         DefaultTableModel dfm = new DefaultTableModel();
-        dfm.addColumn("Usuario");
         dfm.addColumn("Nombre");
+        dfm.addColumn("Correo");
         dfm.addColumn("Acciones");
-        dfm.addRow(hola);
-        dfm.addRow(hola2);
+        String cuentas[];
+        int a=0;
+        try {
+            FileReader fileReader = new FileReader("src/users.txt");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String linea;
+            while ((linea = bufferedReader.readLine()) != null) {
+                cuentas = linea.split(",");
+                String temp[]={cuentas[0],cuentas[2]};
+                dfm.addRow(temp);
+
+            }
+            fileReader.close();
+        } catch (IOException de) {
+            de.printStackTrace();
+        }
+
         JTable tablaUsers = new JTable(dfm);
 
         TableColumn botonBorrar = tablaUsers.getColumnModel().getColumn(2);

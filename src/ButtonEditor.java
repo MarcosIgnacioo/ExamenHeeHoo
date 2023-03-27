@@ -1,44 +1,97 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 class ButtonEditor extends DefaultCellEditor {
-    protected JButton boton;
+    protected JButton button;
+
     private String label;
+
     private boolean isPushed;
+    JTable table;
 
     public ButtonEditor(JCheckBox checkBox) {
         super(checkBox);
-        boton = new JButton("X");
-        boton.setOpaque(true);
-        boton.addActionListener(new ActionListener() {
+        button = new JButton();
+        button.setOpaque(true);
+        button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
+                int dialogButton = JOptionPane.YES_NO_OPTION;
+                int dialogResult = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta fila?", "Confirmación", dialogButton);
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    // Eliminar la fila de la tabla
+                    fireEditingStopped();
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    int selectedRow = table.getSelectedRow();
+                    model.removeRow(selectedRow);
+
+                    // Eliminar el texto correspondiente del archivo de texto
+                    String filename = "src/users.txt";
+                    try {
+                        File inputFile = new File(filename);
+                        File tempFile = new File("src/temp.txt");
+
+                        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                        String currentLine;
+
+                        // Copiar todo el contenido del archivo excepto la línea eliminada
+                        int deletedRow = -1;
+                        int currentRow = 0;
+                        while ((currentLine = reader.readLine()) != null) {
+                            if (currentRow == selectedRow) {
+                                deletedRow = currentRow;
+                            } else {
+                                writer.write(currentLine + System.getProperty("line.separator"));
+                            }
+                            currentRow++;
+                        }
+                        writer.close();
+                        reader.close();
+
+                        // Sobrescribir el archivo original con el archivo temporal que no contiene la línea eliminada
+                        inputFile.delete();
+                        tempFile.renameTo(inputFile);
+
+                        JOptionPane.showMessageDialog(null, "La fila se ha eliminado correctamente");
+                    } catch (FileNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename + "'");
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "Error al leer/escribir el archivo '" + filename + "'");
+                        ex.printStackTrace();
+                    }
+                } else {
+                    isPushed = false;
+                }
             }
         });
-    }public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+    }
+
+    public Component getTableCellEditorComponent(JTable table, Object value,
+                                                 boolean isSelected, int row, int column) {
         if (isSelected) {
-            boton.setForeground(table.getSelectionForeground());
-            boton.setBackground(table.getSelectionBackground());
+            button.setForeground(table.getSelectionForeground());
+            button.setBackground(table.getSelectionBackground());
         } else {
-            boton.setForeground(table.getForeground());
-            boton.setBackground(table.getBackground());
+            button.setForeground(table.getForeground());
+            button.setBackground(table.getBackground());
         }
-        label = (value == null) ? "xx" : value.toString();
-        boton.setText(label);
+        label = (value == null) ? "X" : value.toString();
+        button.setText(label);
         isPushed = true;
-        return boton;
+        this.table = table;
+        return button;
     }
 
     public Object getCellEditorValue() {
         if (isPushed) {
-            JOptionPane.showMessageDialog(boton, label + ": Ouch!");
+            JOptionPane.showMessageDialog(button, label + ": Ouch!");
         }
         isPushed = false;
         return new String(label);
