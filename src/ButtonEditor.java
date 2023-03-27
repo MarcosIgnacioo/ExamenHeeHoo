@@ -23,13 +23,13 @@ class ButtonEditor extends DefaultCellEditor {
                 int dialogButton = JOptionPane.YES_NO_OPTION;
                 int dialogResult = JOptionPane.showConfirmDialog(null, "¿Está seguro de que desea eliminar esta fila?", "Confirmación", dialogButton);
                 if (dialogResult == JOptionPane.YES_OPTION) {
-                    // Eliminar la fila de la tabla
+
                     fireEditingStopped();
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
                     int selectedRow = table.getSelectedRow();
                     model.removeRow(selectedRow);
 
-                    // Eliminar el texto correspondiente del archivo de texto
+
                     String filename = "src/users.txt";
                     try {
                         File inputFile = new File(filename);
@@ -40,7 +40,7 @@ class ButtonEditor extends DefaultCellEditor {
 
                         String currentLine;
 
-                        // Copiar todo el contenido del archivo excepto la línea eliminada
+
                         int deletedRow = -1;
                         int currentRow = 0;
                         while ((currentLine = reader.readLine()) != null) {
@@ -54,7 +54,7 @@ class ButtonEditor extends DefaultCellEditor {
                         writer.close();
                         reader.close();
 
-                        // Sobrescribir el archivo original con el archivo temporal que no contiene la línea eliminada
+
                         inputFile.delete();
                         tempFile.renameTo(inputFile);
 
