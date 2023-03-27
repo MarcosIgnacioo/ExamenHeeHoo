@@ -18,7 +18,11 @@ public class ExamenVentana extends JFrame {
     String datosNuevos = null;
     private String bienvenidoNombre = "";
     private static int usuarioId = 0;
+    private static boolean vieneDeLista = false;
+
+    private static boolean vieneDeMenuBar = false;
     private static String usuarioInfo [] = new String[4];
+    private static String usuarioInfoLista[] = new String[4];
 
     private int numcuenta[];
     boolean leerParaCreer(String correo, int size){
@@ -177,9 +181,7 @@ public class ExamenVentana extends JFrame {
             String linea;
             while ((linea = bufferedReader.readLine()) != null) {
                 cuentas = linea.split(",");
-                nombrecuentas+=cuentas[0]+",";
-
-
+                nombrecuentas+=cuentas[2]+","; // puse el correo como lo que se muestra en el combobox para evitar confusiones
 
             }
             fileReader.close();
@@ -220,7 +222,7 @@ public class ExamenVentana extends JFrame {
 
         JScrollPane panelTabla = new JScrollPane(tablaUsers);
         getContentPane().add(panelTabla);
-        panelTabla.setBounds(76, 267, 340, 401);
+        panelTabla.setBounds(76, 267, 340, 200);
         setVisible(true);
 
         return panelTabla;
@@ -248,18 +250,46 @@ public class ExamenVentana extends JFrame {
         cajanombres.setBounds(76, 168, 340, 34);
         pLista.add(cajanombres);
         String nombrescaja[];
+
         nombrescaja = nombreUsuarios().split(",");
 
         for(int i=0;i<nombrescaja.length;i++){
             cajanombres.addItem(nombrescaja[i]);
 
         }
-
         JButton editar = new JButton("Editar a "+cajanombres.getSelectedItem().toString());
         editar.setBounds(76, 213, 340, 34);
         editar.setFont(new Font("Arial", Font.BOLD, 18));
         editar.setBackground(new Color(0, 255, 0));
         pLista.add(editar);
+        editar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    FileReader fileReader = new FileReader("src/users.txt");
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+                    String linea;
+                    String infoUsuarioActual[];
+                    while ((linea = bufferedReader.readLine()) != null) {
+                        infoUsuarioActual = linea.split(",");
+                        if (infoUsuarioActual[2].equals(cajanombres.getSelectedItem())){
+                            for (int i = 0; i<usuarioInfoLista.length; i++){
+                                usuarioInfoLista[i] = infoUsuarioActual[i];
+                            }
+                        }
+                    }
+                }
+                catch (FileNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                anterior = actual;
+                actual = "ModificarCuenta";
+                limpiarVentana();
+            }
+        });
 
         cajanombres.addActionListener(new ActionListener() {
             @Override
@@ -298,7 +328,7 @@ public class ExamenVentana extends JFrame {
         enterUser.setVisible(true);
         pLogIn.add(enterUser);
 
-        JTextField usuarioTF = new JTextField("nombre");
+        JTextField usuarioTF = new JTextField("correo");
         usuarioTF.setBounds(76, 337, 348, 34);
         usuarioTF.setVisible(true);
         usuarioTF.getBorder();
@@ -335,9 +365,9 @@ public class ExamenVentana extends JFrame {
                     String linea;
                     while ((linea = bufferedReader.readLine()) != null) {
                         cuentas = linea.split(",");
-                        if (cuentas[0].equals(userName) && cuentas[3].equals(passwordConf)){
+                        if (cuentas[2].equals(userName) && cuentas[3].equals(passwordConf)){
                             usuarioInfo = cuentas;
-                            bienvenidoNombre = userName;
+                            bienvenidoNombre = cuentas[0];
                             entro = 1;
                         }
                     }
@@ -381,8 +411,10 @@ public class ExamenVentana extends JFrame {
         JMenu cuenta = new JMenu("Cuenta");
         JMenuItem miCuenta = new JMenuItem("Mi cuenta");
         JMenuItem cerrarSesion = new JMenuItem("Cerrar sesion");
+        JMenuItem inicioCuenta = new JMenuItem("Inicio");
         cuenta.add(miCuenta);
         cuenta.add(cerrarSesion);
+        cuenta.add(inicioCuenta);
 
         JMenu usuarios= new JMenu("Usuarios");
         JMenuItem listaDeUsuarios = new JMenuItem("Lista de usuarios");
@@ -403,9 +435,12 @@ public class ExamenVentana extends JFrame {
         listaDeUsuarios.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                anterior = actual;
-                actual = "lista";
-                limpiarVentana();
+                if (actual != "lista"){
+                    vieneDeMenuBar = false;
+                    anterior = actual;
+                    actual = "lista";
+                    limpiarVentana();
+                }
             }
         });
         cerrarSesion.addActionListener(new ActionListener() {
@@ -417,6 +452,7 @@ public class ExamenVentana extends JFrame {
                 }
                 anterior = actual;
                 actual = "logIn";
+                vieneDeMenuBar = false;
                 limpiarVentana();
             }
         });
@@ -424,6 +460,7 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (actual != "ModificarCuenta"){
+                    vieneDeMenuBar = true;
                     anterior = actual;
                     actual = "ModificarCuenta";
                     limpiarVentana();
@@ -435,6 +472,7 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (actual != "RegistrarUsuario"){
+                    vieneDeMenuBar = false;
                 anterior = actual;
                 actual = "RegistrarUsuario";
                 limpiarVentana();
@@ -445,9 +483,23 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (actual != "ComoCrearUsuario"){
+                    vieneDeMenuBar = false;
                 anterior = actual;
                 actual = "ComoCrearUsuario";
                 limpiarVentana();
+                }
+            }
+        });
+
+        inicioCuenta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (actual != "loggedIn"){
+                    vieneDeMenuBar = false;
+                    anterior = actual;
+                    actual = "loggedIn";
+                    limpiarVentana();
                 }
             }
         });
@@ -567,17 +619,26 @@ public class ExamenVentana extends JFrame {
                 if (leerParaCreer(cambiarCorreoTF.getText(), contadorFilas("src/users.txt")) == false && vacia.length() != 0 && !cambiarNombreTF.getText().equals("")&& !cambiarApellidosTF.getText().equals("")&& !cambiarCorreoTF.getText().equals("")&& !new String(cambiarPasswordTF.getPassword()).equals("")){
 
                     JOptionPane.showMessageDialog(null,"todo bien","BIEN:)!", JOptionPane.INFORMATION_MESSAGE);
-
-                    datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
+                    if (vieneDeMenuBar == true){
+                        datosAnteriores = usuarioInfo[0]+","+usuarioInfo[1]+","+usuarioInfo[2]+","+usuarioInfo[3];
+                        System.out.println("luigi");
+                    }
+                    else{
+                        System.out.println("wja");
+                        datosAnteriores = usuarioInfoLista[0]+","+usuarioInfoLista[1]+","+usuarioInfoLista[2]+","+usuarioInfoLista[3];
+                    }
                     datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+new String(cambiarPasswordTF.getPassword());
 
                     actualizarDatos("src/users.txt", datosAnteriores, datosNuevos, contadorFilas("src/users.txt"));
-                    datosAnteriores = datosNuevos;
-                    usuarioInfo[0] = cambiarNombreTF.getText();
-                    usuarioInfo[1] = cambiarApellidosTF.getText();
-                    usuarioInfo[2] = cambiarCorreoTF.getText();
-                    usuarioInfo[3] = new String(cambiarPasswordTF.getPassword());
-                    bienvenidoNombre = usuarioInfo[0];
+                    if (vieneDeMenuBar == true){
+                        datosAnteriores = datosNuevos;
+                        usuarioInfo[0] = cambiarNombreTF.getText();
+                        usuarioInfo[1] = cambiarApellidosTF.getText();
+                        usuarioInfo[2] = cambiarCorreoTF.getText();
+                        usuarioInfo[3] = new String(cambiarPasswordTF.getPassword());
+                        bienvenidoNombre = usuarioInfo[0];
+                        vieneDeMenuBar = false;
+                    }
                     String bubble = anterior;
                     anterior = actual;
                     actual = bubble;
@@ -759,10 +820,6 @@ public class ExamenVentana extends JFrame {
                                     i.printStackTrace();
                                 }
                                 JOptionPane.showMessageDialog(null,"Registro exitoso","BIEN(:!", JOptionPane.INFORMATION_MESSAGE);
-                                setJMenuBar(null);
-                                anterior = actual;
-                                actual = "logIn";
-                                limpiarVentana();
                             }
                             else{
                                 JOptionPane.showMessageDialog(null,"El correo ingresado ya se encuentra registrado","mal:(!", JOptionPane.ERROR_MESSAGE);
