@@ -27,8 +27,8 @@ class ButtonEditor extends DefaultCellEditor {
                     fireEditingStopped();
                     DefaultTableModel model = (DefaultTableModel) table.getModel();
                     int selectedRow = table.getSelectedRow();
+                    System.out.println(selectedRow);
                     model.removeRow(selectedRow);
-
 
                     String filename = "src/users.txt";
                     try {
@@ -41,11 +41,10 @@ class ButtonEditor extends DefaultCellEditor {
                         String currentLine;
 
 
-                        int deletedRow = -1;
                         int currentRow = 0;
                         while ((currentLine = reader.readLine()) != null) {
                             if (currentRow == selectedRow) {
-                                deletedRow = currentRow;
+                                System.out.println(currentRow + "woah");
                             } else {
                                 writer.write(currentLine + System.getProperty("line.separator"));
                             }

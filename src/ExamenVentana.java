@@ -44,6 +44,7 @@ public class ExamenVentana extends JFrame {
                 }
                 contador++;
             }
+            bufferedReader.close();
             fileReader.close();
         } catch (IOException de) {
             de.printStackTrace();
@@ -97,7 +98,9 @@ public class ExamenVentana extends JFrame {
             int filas = 0;
             while ((linea = bufferedReader.readLine()) != null) {
                 filas++;
-            }
+            };
+            fileReader.close();
+            bufferedReader.close();
             return filas;
         }
         catch (FileNotFoundException ex) {
@@ -185,6 +188,7 @@ public class ExamenVentana extends JFrame {
 
             }
             fileReader.close();
+            bufferedReader.close();
         } catch (IOException de) {
             de.printStackTrace();
         }
@@ -209,6 +213,7 @@ public class ExamenVentana extends JFrame {
 
             }
             fileReader.close();
+            bufferedReader.close();
         } catch (IOException de) {
             de.printStackTrace();
         }
@@ -264,26 +269,40 @@ public class ExamenVentana extends JFrame {
         pLista.add(editar);
         editar.addActionListener(new ActionListener() {
 
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                try{
-                    FileReader fileReader = new FileReader("src/users.txt");
-                    BufferedReader bufferedReader = new BufferedReader(fileReader);
-                    String linea;
-                    String infoUsuarioActual[];
-                    while ((linea = bufferedReader.readLine()) != null) {
-                        infoUsuarioActual = linea.split(",");
-                        if (infoUsuarioActual[2].equals(cajanombres.getSelectedItem())){
-                            for (int i = 0; i<usuarioInfoLista.length; i++){
-                                usuarioInfoLista[i] = infoUsuarioActual[i];
-                            }
+                String filename = "src/users.txt";
+                try {
+                    File inputFile = new File(filename);
+                    File tempFile = new File("src/temp.txt");
+
+                    BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                    String currentLine;
+                    String userpoop[];
+                    int currentRow = 0;
+                    while ((currentLine = reader.readLine()) != null) {
+                        userpoop = currentLine.split(",");
+                        if (userpoop[2].equals(cajanombres.getSelectedItem())){
+                            usuarioInfoLista[0] = userpoop[0];
+                            usuarioInfoLista[1] = userpoop[1];
+                            usuarioInfoLista[2] = userpoop[2];
+                            usuarioInfoLista[3] = userpoop[3];
                         }
+                        currentRow++;
                     }
-                }
-                catch (FileNotFoundException ex) {
-                    throw new RuntimeException(ex);
+                    writer.close();
+                    reader.close();
+
+                    JOptionPane.showMessageDialog(null, "El perfil se ha eliminado correctamente");
+                } catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename + "'");
+                    ex.printStackTrace();
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    JOptionPane.showMessageDialog(null, "Error al leer/escribir el archivo '" + filename + "'");
+                    ex.printStackTrace();
                 }
                 anterior = actual;
                 actual = "ModificarCuenta";
@@ -381,6 +400,7 @@ public class ExamenVentana extends JFrame {
                         actual = "loggedIn";
                         limpiarVentana();
                     }
+                    bufferedReader.close();
                     fileReader.close();
                 } catch (IOException de) {
                     de.printStackTrace();
@@ -605,10 +625,12 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 bienvenidoNombre = usuarioInfo[0];
-                String bubble = anterior;
-                anterior = actual;
-                actual = bubble;
-                limpiarVentana();
+                if (anterior != "ModificarCuenta"){
+                    String bubble = anterior;
+                    anterior = actual;
+                    actual = bubble;
+                    limpiarVentana();
+                }
             }
         });
 
@@ -639,17 +661,13 @@ public class ExamenVentana extends JFrame {
                         bienvenidoNombre = usuarioInfo[0];
                         vieneDeMenuBar = false;
                     }
-                    String bubble = anterior;
-                    anterior = actual;
-                    actual = bubble;
-                    limpiarVentana();
                 }
                 else if (cambiarNombreTF.getText().equals("") || cambiarApellidosTF.getText().equals("")|| cambiarCorreoTF.getText().equals("")|| new String(cambiarPasswordTF.getPassword()).equals("")){
                     JOptionPane.showMessageDialog(null,"Rellene todos los campos","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
                 else if (vacia.length() == 0){
                     JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada por alguna mañosada, reviertalo","mal:(!", JOptionPane.ERROR_MESSAGE);
-
+                    vacia.delete();
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
@@ -814,8 +832,10 @@ public class ExamenVentana extends JFrame {
                                 try (FileWriter escritorArchivo = new FileWriter("src/users.txt", true);
                                      BufferedWriter escritorBuffer = new BufferedWriter(escritorArchivo);
                                      PrintWriter impresoraEScritora = new PrintWriter(escritorBuffer);)
+
                                 {
                                     impresoraEScritora.println(nombreR + "," + apellidoR + "," + correoR + "," + pass1);
+
                                 } catch (IOException i) {
                                     i.printStackTrace();
                                 }
@@ -824,6 +844,8 @@ public class ExamenVentana extends JFrame {
                             else{
                                 JOptionPane.showMessageDialog(null,"El correo ingresado ya se encuentra registrado","mal:(!", JOptionPane.ERROR_MESSAGE);
                             }
+
+                            bufferedReader.close();
                             fileReader.close();
                         } catch (IOException de) {
                             de.printStackTrace();
