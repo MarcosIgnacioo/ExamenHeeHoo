@@ -1,11 +1,12 @@
 import org.w3c.dom.CDATASection;
 
 import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,7 @@ public class ExamenVentana extends JFrame {
     String datosNuevos = null;
     private String bienvenidoNombre = "";
     private static int usuarioId = 0;
+    private String nombrescaja[];
     private static boolean vieneDeLista = false;
 
     private static boolean vieneDeMenuBar = false;
@@ -110,7 +112,7 @@ public class ExamenVentana extends JFrame {
         }
     }
     public ExamenVentana() throws InterruptedException {
-
+        this.getContentPane().setBackground(new Color(0, 255, 127));
         this.setVisible(true);
         this.setSize(700,900);
         this.setLocationRelativeTo(null);
@@ -173,27 +175,7 @@ public class ExamenVentana extends JFrame {
         }
     }
 
-    public String nombreUsuarios(){
-        String cuentas[];
-        String nombrecuentas="";
 
-
-        try {
-            FileReader fileReader = new FileReader("src/users.txt");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String linea;
-            while ((linea = bufferedReader.readLine()) != null) {
-                cuentas = linea.split(",");
-                nombrecuentas+=cuentas[2]+","; // puse el correo como lo que se muestra en el combobox para evitar confusiones
-
-            }
-            fileReader.close();
-            bufferedReader.close();
-        } catch (IOException de) {
-            de.printStackTrace();
-        }
-        return nombrecuentas;
-    }
 
     public JScrollPane tabla(){
         DefaultTableModel dfm = new DefaultTableModel();
@@ -232,6 +214,7 @@ public class ExamenVentana extends JFrame {
 
         return panelTabla;
     }
+
     public JPanel listaUsuarios () {
         JPanel pLista = new JPanel();
         pLista.setSize(507,732);
@@ -254,11 +237,10 @@ public class ExamenVentana extends JFrame {
         JComboBox cajanombres = new JComboBox();
         cajanombres.setBounds(76, 168, 340, 34);
         pLista.add(cajanombres);
-        String nombrescaja[];
+        nombrescaja= ButtonEditor.nombreUsuarios().split(",");
 
-        nombrescaja = nombreUsuarios().split(",");
 
-        for(int i=0;i<nombrescaja.length;i++){
+        for(int i = 0; i<nombrescaja.length; i++){
             cajanombres.addItem(nombrescaja[i]);
 
         }
@@ -272,50 +254,87 @@ public class ExamenVentana extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String filename = "src/users.txt";
-                try {
-                    File inputFile = new File(filename);
-                    File tempFile = new File("src/temp.txt");
 
-                    BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                    BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
 
-                    String currentLine;
-                    String userpoop[];
-                    int currentRow = 0;
-                    while ((currentLine = reader.readLine()) != null) {
-                        userpoop = currentLine.split(",");
-                        if (userpoop[2].equals(cajanombres.getSelectedItem())){
-                            usuarioInfoLista[0] = userpoop[0];
-                            usuarioInfoLista[1] = userpoop[1];
-                            usuarioInfoLista[2] = userpoop[2];
-                            usuarioInfoLista[3] = userpoop[3];
+                    String filename = "src/users.txt";
+                    try {
+                        File inputFile = new File(filename);
+                        File tempFile = new File("src/temp.txt");
+
+                        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                        BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                        String currentLine;
+                        String userpoop[];
+                        int currentRow = 0;
+                        while ((currentLine = reader.readLine()) != null) {
+                            userpoop = currentLine.split(",");
+                            if (userpoop[2].equals(cajanombres.getSelectedItem())) {
+                                usuarioInfoLista[0] = userpoop[0];
+                                usuarioInfoLista[1] = userpoop[1];
+                                usuarioInfoLista[2] = userpoop[2];
+                                usuarioInfoLista[3] = userpoop[3];
+                            }
+                            currentRow++;
                         }
-                        currentRow++;
+                        writer.close();
+                        reader.close();
+
+                    } catch (FileNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename + "'");
+                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "Error al leer/escribir el archivo '" + filename + "'");
+                        ex.printStackTrace();
                     }
-                    writer.close();
-                    reader.close();
-
-                    JOptionPane.showMessageDialog(null, "El perfil se ha eliminado correctamente");
-                } catch (FileNotFoundException ex) {
-                    JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename + "'");
-                    ex.printStackTrace();
-                } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(null, "Error al leer/escribir el archivo '" + filename + "'");
-                    ex.printStackTrace();
+                    anterior = actual;
+                    actual = "ModificarCuenta";
+                    limpiarVentana();
                 }
-                anterior = actual;
-                actual = "ModificarCuenta";
-                limpiarVentana();
+
+
+        });
+
+        cajanombres.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
+                cajanombres.removeAllItems();
+                nombrescaja = ButtonEditor.nombreUsuarios().split(",");
+
+                for(int i = 0; i< nombrescaja.length; i++){
+                    cajanombres.addItem(nombrescaja[i]);
+
+                }
+                repaint();
+                revalidate();
+            }
+
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
+
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+                editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
+                cajanombres.removeAllItems();
+                nombrescaja = ButtonEditor.nombreUsuarios().split(",");
+
+                for(int i = 0; i< nombrescaja.length; i++){
+                    cajanombres.addItem(nombrescaja[i]);
+
+                }
+                repaint();
+                revalidate();
             }
         });
 
-        cajanombres.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
-            }
-        });
+
+
+
+
         pLista.add(tabla());
 
 
@@ -410,6 +429,12 @@ public class ExamenVentana extends JFrame {
 
         this.add(pLogIn);
         return pLogIn;
+    }
+
+    public static String cuentainiciada(){
+        String lacuenta ="";
+        lacuenta+=usuarioInfo[0]+","+usuarioInfo[2];
+        return lacuenta;
     }
     public JPanel loggedInCambio (){
         JPanel pLoggedIn = new JPanel();
@@ -604,12 +629,14 @@ public class ExamenVentana extends JFrame {
         JButton cancelar = new JButton("Cancelar");
         cancelar.setFont(new Font("Arial", Font.BOLD, 11));
         cancelar.setBorderPainted(false);
+        cancelar.setForeground(Color.BLACK);
         cancelar.setBackground(Color.RED);
         cancelar.setBounds(76, 575, 173, 34);
         pChangeData.add(cancelar);
 
         JButton actualizar = new JButton("Actualizar");
         actualizar.setFont(new Font("Arial", Font.BOLD, 11));
+        actualizar.setForeground(Color.BLACK);
         actualizar.setBorderPainted(false);
         actualizar.setBackground(new Color(50, 205, 50));
         actualizar.setBounds(251, 575,173, 34);
@@ -646,8 +673,10 @@ public class ExamenVentana extends JFrame {
                         System.out.println("luigi");
                     }
                     else{
+
                         System.out.println("wja");
                         datosAnteriores = usuarioInfoLista[0]+","+usuarioInfoLista[1]+","+usuarioInfoLista[2]+","+usuarioInfoLista[3];
+
                     }
                     datosNuevos = cambiarNombreTF.getText()+","+cambiarApellidosTF.getText()+","+cambiarCorreoTF.getText()+","+new String(cambiarPasswordTF.getPassword());
 
@@ -660,6 +689,7 @@ public class ExamenVentana extends JFrame {
                         usuarioInfo[3] = new String(cambiarPasswordTF.getPassword());
                         bienvenidoNombre = usuarioInfo[0];
                         vieneDeMenuBar = false;
+                        cuentainiciada();
                     }
                 }
                 else if (cambiarNombreTF.getText().equals("") || cambiarApellidosTF.getText().equals("")|| cambiarCorreoTF.getText().equals("")|| new String(cambiarPasswordTF.getPassword()).equals("")){
@@ -673,6 +703,7 @@ public class ExamenVentana extends JFrame {
                     JOptionPane.showMessageDialog(null,"El correo ingresado ya existe","mal:(!", JOptionPane.ERROR_MESSAGE);
 
                 }
+                cuentainiciada();
             }
         });
 
@@ -780,6 +811,7 @@ public class ExamenVentana extends JFrame {
         JButton registrar = new JButton("Registrar");
         registrar.setBackground(new Color(50, 205, 50));
         registrar.setFont(new Font("Arial", Font.BOLD, 11));
+        registrar.setForeground(Color.BLACK);
         registrar.setBorderPainted(false);
         registrar.setBounds(252, 652, 173, 34);
         registrar.setVisible(true);

@@ -4,7 +4,8 @@ import java.awt.*;
 
 class ButtonRenderer extends JButton implements TableCellRenderer {
     public ButtonRenderer() {
-        setOpaque(true);
+        setOpaque(false);
+        setContentAreaFilled(false);
     }
 
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -15,7 +16,7 @@ class ButtonRenderer extends JButton implements TableCellRenderer {
             setForeground(table.getForeground());
             setBackground(UIManager.getColor("Button.background"));
         }
-        setText((value == null) ? "X" : value.toString());
+        setIcon(new ImageIcon("src/basura.png"));
         return this;
     }
 }

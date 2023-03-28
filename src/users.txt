@@ -1,5 +1,3 @@
-a,a,a,a
-e,e,e,e
-i,i,i,i
-o,o,o,o
-u,u,u,u
+y,y,yu,y
+j,j,j,j
+y,y,y,y
