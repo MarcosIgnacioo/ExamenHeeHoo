@@ -1,2 +1,1 @@
-j,j,j,j
-u,uu,uuu,uu
+y,y,y,y

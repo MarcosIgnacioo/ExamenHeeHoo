@@ -263,7 +263,34 @@ public class ExamenVentana extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                String filename2 = "src/users.txt";
+                boolean sePuedeEditar = false;
+                try {
+                    File inputFile = new File(filename2);
+                    File tempFile = new File("src/temp.txt");
 
+                    BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                    BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                    String currentLine;
+                    String userpoop[];
+                    while ((currentLine = reader.readLine()) != null) {
+                        userpoop = currentLine.split(",");
+                        if (userpoop[2].equals(cajanombres.getSelectedItem())) {
+                            sePuedeEditar = true;
+                        }
+                    }
+                    writer.close();
+                    reader.close();
+
+                } catch (FileNotFoundException ex) {
+                    JOptionPane.showMessageDialog(null, "No se encontró el archivo '" + filename2 + "'");
+                    ex.printStackTrace();
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(null, "Error al leer/escribir el archivo '" + filename2 + "'");
+                    ex.printStackTrace();
+                }
+                if (sePuedeEditar== true){
                     String filename = "src/users.txt";
                     try {
                         File inputFile = new File(filename);
@@ -302,7 +329,10 @@ public class ExamenVentana extends JFrame {
                     actual = "ModificarCuenta";
                     limpiarVentana();
                 }
-
+                else{
+                    JOptionPane.showMessageDialog(null,"No existe ya ese usuario", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
 
         });
 
@@ -497,7 +527,7 @@ public class ExamenVentana extends JFrame {
         usuarios.add(crearUsuario);
 
         JMenu ayuda= new JMenu("Ayuda");
-        JMenuItem comoCrear = new JMenuItem("Como crear usuarios?");
+        JMenuItem comoCrear = new JMenuItem("¿Como crear usuarios?");
         comoCrear.setOpaque(true);
         comoCrear.setBackground(Color.decode("#DEDEDE"));
         ayuda.add(comoCrear);
@@ -725,7 +755,7 @@ public class ExamenVentana extends JFrame {
                     JOptionPane.showMessageDialog(null,"Rellene todos los campos solicitados","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
                 else if (vacia.length() == 0){
-                    JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada que pena, si fue usted puede revertirlo con ctrl+z","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Al parecer toda la información de los usuarios ha sido borrada que pena, si fue usted puede revertirlo con ctrl+z","mal:(!", JOptionPane.ERROR_MESSAGE);
                     vacia.delete();
                 }
                 else{
