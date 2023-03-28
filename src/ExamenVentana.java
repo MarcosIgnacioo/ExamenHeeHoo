@@ -113,7 +113,7 @@ public class ExamenVentana extends JFrame {
     }
     public ExamenVentana() throws InterruptedException {
         Splash splashScreen = new Splash("src/splash4.gif");
-        Thread.sleep(9000);
+        Thread.sleep(5900);
         SwingUtilities.invokeLater(() -> {
         });
         splashScreen.dispose();
@@ -331,6 +331,8 @@ public class ExamenVentana extends JFrame {
                 }
                 else{
                     JOptionPane.showMessageDialog(null,"No existe ya ese usuario", "Error", JOptionPane.ERROR_MESSAGE);
+                    cajanombres.setSelectedItem(usuarioInfo[2]);
+                    editar.setText("Editar a "+cajanombres.getSelectedItem().toString());
                 }
             }
 
@@ -527,7 +529,7 @@ public class ExamenVentana extends JFrame {
         usuarios.add(crearUsuario);
 
         JMenu ayuda= new JMenu("Ayuda");
-        JMenuItem comoCrear = new JMenuItem("¿Como crear usuarios?");
+        JMenuItem comoCrear = new JMenuItem("¿Cómo crear usuarios?");
         comoCrear.setOpaque(true);
         comoCrear.setBackground(Color.decode("#DEDEDE"));
         ayuda.add(comoCrear);
@@ -787,6 +789,7 @@ public class ExamenVentana extends JFrame {
         JLabel userrr = new JLabel("");
         userrr.setIcon(new ImageIcon("src/userReg.png"));
         userrr.setBounds(188, 107, 150, 150);
+        userrr.setHorizontalAlignment(SwingConstants.CENTER);
         pRegister.add(userrr);
 
         JLabel nombre = new JLabel("Nombre:", JLabel.LEFT);
