@@ -112,7 +112,12 @@ public class ExamenVentana extends JFrame {
         }
     }
     public ExamenVentana() throws InterruptedException {
-        this.getContentPane().setBackground(new Color(0, 255, 127));
+        Splash splashScreen = new Splash("src/splash4.gif");
+        Thread.sleep(9000);
+        SwingUtilities.invokeLater(() -> {
+        });
+        splashScreen.dispose();
+        this.getContentPane().setBackground(Color.decode("#1C1B20"));
         this.setVisible(true);
         this.setSize(700,900);
         this.setLocationRelativeTo(null);
@@ -219,18 +224,20 @@ public class ExamenVentana extends JFrame {
         JPanel pLista = new JPanel();
         pLista.setSize(507,732);
         pLista.setLocation(91,61);
-        pLista.setBackground(new Color(0, 255, 127));
+        pLista.setBackground(new Color(28, 27, 32));
         pLista.setLayout(null);
 
         JLabel list = new JLabel("Lista de usuarios");
         list.setBounds(109, 91, 283, 46);
         list.setHorizontalAlignment(SwingConstants.CENTER);
         list.setFont(new Font("Arial", Font.BOLD,25));
+        list.setForeground(new Color(242, 247, 133));
         pLista.add(list);
 
         JLabel edittext = new JLabel("Editar");
         edittext.setBounds(76, 135, 188, 34);
         edittext.setFont(new Font("Arial", Font.BOLD,18));
+        edittext.setForeground(new Color(242, 247, 133));
         pLista.add(edittext);
 
 
@@ -247,7 +254,8 @@ public class ExamenVentana extends JFrame {
         JButton editar = new JButton("Editar a "+cajanombres.getSelectedItem().toString());
         editar.setBounds(76, 213, 340, 34);
         editar.setFont(new Font("Arial", Font.BOLD, 18));
-        editar.setBackground(new Color(0, 255, 0));
+        editar.setForeground(new Color(28, 27, 32));
+        editar.setBackground(new Color(242, 247, 133));
         pLista.add(editar);
         editar.addActionListener(new ActionListener() {
 
@@ -270,6 +278,9 @@ public class ExamenVentana extends JFrame {
                         while ((currentLine = reader.readLine()) != null) {
                             userpoop = currentLine.split(",");
                             if (userpoop[2].equals(cajanombres.getSelectedItem())) {
+                                if (cajanombres.getSelectedItem().equals(usuarioInfo[2])){
+                                    vieneDeMenuBar = true;
+                                }
                                 usuarioInfoLista[0] = userpoop[0];
                                 usuarioInfoLista[1] = userpoop[1];
                                 usuarioInfoLista[2] = userpoop[2];
@@ -349,44 +360,49 @@ public class ExamenVentana extends JFrame {
         JPanel pLogIn = new JPanel();
         pLogIn.setSize(507,732);
         pLogIn.setLocation(91,61);
-        pLogIn.setBackground(new Color(0, 255, 127));
+        pLogIn.setBackground(Color.decode("#1C1B20"));
         pLogIn.setLayout(null);
 
-
         JLabel acceder = new JLabel("Accede a tu cuenta");
-        acceder.setFont(new Font("Arial", Font.PLAIN, 25));
+        acceder.setFont(new Font("Arial", Font.BOLD, 30));
+        acceder.setForeground(Color.decode("#F2F785"));
         acceder.setHorizontalAlignment(SwingConstants.CENTER);
         acceder.setBounds(112, 60, 283, 148);
         pLogIn.add(acceder);
 
         JLabel enterUser = new JLabel("Ingrese su correo", JLabel.LEFT);
+        enterUser.setForeground(Color.decode("#F2F785"));
         enterUser.setBounds(76, 304, 156, 34);
-        enterUser.setFont(new Font("Arial", Font.PLAIN, 17));
-        enterUser.setForeground(new Color(67, 42, 42));
+        enterUser.setFont(new Font("Arial", Font.BOLD, 17));
         enterUser.setVisible(true);
         pLogIn.add(enterUser);
 
-        JTextField usuarioTF = new JTextField("correo");
+        JTextField usuarioTF = new JTextField("");
         usuarioTF.setBounds(76, 337, 348, 34);
         usuarioTF.setVisible(true);
         usuarioTF.getBorder();
         pLogIn.add(usuarioTF);
 
         JLabel enterPass = new JLabel("Ingrese su contraseña", JLabel.LEFT);
-        enterPass.setBounds(76, 375, 188, 34);
-        enterPass.setFont(new Font("Arial", Font.PLAIN, 17));
-        enterPass.setForeground(new Color(67, 42, 42));
+        enterPass.setFont(new Font("Arial", Font.BOLD,17));
+        enterPass.setForeground(Color.decode("#F2F785"));
+        enterPass.setBounds(76, 375, 300, 34);
         enterPass.setVisible(true);
         pLogIn.add(enterPass);
 
-        JPasswordField passwordTF = new JPasswordField("contra");
+        JPasswordField passwordTF = new JPasswordField("");
+        passwordTF.setFont(new Font("Arial", Font.BOLD,24));
         passwordTF.setBounds(76, 414, 348, 34);
         passwordTF.setVisible(true);
         pLogIn.add(passwordTF);
 
         JButton logIn = new JButton("Acceder");
+        logIn.setFont(new Font("Arial", Font.BOLD,24));
         logIn.setBounds(132, 507, 247, 61);
         logIn.setVisible(true);
+        logIn.setOpaque(true);
+        logIn.setBackground(Color.decode("#F2F785"));
+        logIn.setBorderPainted(false);
         pLogIn.add(logIn);
 
         logIn.addActionListener(new ActionListener() {
@@ -440,23 +456,32 @@ public class ExamenVentana extends JFrame {
         JPanel pLoggedIn = new JPanel();
         pLoggedIn.setSize(507,732);
         pLoggedIn.setLocation(91,61);
-        pLoggedIn.setBackground(new Color(0, 255, 127));
+        pLoggedIn.setBackground(Color.decode("#1C1B20"));
         pLoggedIn.setLayout(null);
 
         JLabel bienvenido = new JLabel("Hola " +bienvenidoNombre); // ver como actualizar el nombre cuando se cambia el usuario
         bienvenido.setBounds(113, 123, 283, 148);
         bienvenido.setFont(new Font("Arial", Font.BOLD, 24));
         bienvenido.setHorizontalAlignment(SwingConstants.CENTER);
+        bienvenido.setForeground(Color.decode("#F2F785"));
         bienvenido.setVisible(true);
         pLoggedIn.add(bienvenido);
 
         JMenuBar barraMenu = new JMenuBar();
+        barraMenu.setOpaque(true);
+        barraMenu.setBackground(Color.decode("#DEDEDE"));
         barraMenu.setVisible(true);
 
         JMenu cuenta = new JMenu("Cuenta");
         JMenuItem miCuenta = new JMenuItem("Mi cuenta");
         JMenuItem cerrarSesion = new JMenuItem("Cerrar sesion");
         JMenuItem inicioCuenta = new JMenuItem("Inicio");
+        miCuenta.setOpaque(true);
+        miCuenta.setBackground(Color.decode("#DEDEDE"));
+        cerrarSesion.setOpaque(true);
+        cerrarSesion.setBackground(Color.decode("#DEDEDE"));
+        inicioCuenta.setOpaque(true);
+        inicioCuenta.setBackground(Color.decode("#DEDEDE"));
         cuenta.add(miCuenta);
         cuenta.add(cerrarSesion);
         cuenta.add(inicioCuenta);
@@ -464,11 +489,17 @@ public class ExamenVentana extends JFrame {
         JMenu usuarios= new JMenu("Usuarios");
         JMenuItem listaDeUsuarios = new JMenuItem("Lista de usuarios");
         JMenuItem crearUsuario = new JMenuItem("Crear usuario");
+        listaDeUsuarios.setOpaque(true);
+        listaDeUsuarios.setBackground(Color.decode("#DEDEDE"));
+        crearUsuario.setOpaque(true);
+        crearUsuario.setBackground(Color.decode("#DEDEDE"));
         usuarios.add(listaDeUsuarios);
         usuarios.add(crearUsuario);
 
         JMenu ayuda= new JMenu("Ayuda");
         JMenuItem comoCrear = new JMenuItem("Como crear usuarios?");
+        comoCrear.setOpaque(true);
+        comoCrear.setBackground(Color.decode("#DEDEDE"));
         ayuda.add(comoCrear);
 
 
@@ -554,12 +585,10 @@ public class ExamenVentana extends JFrame {
     }
     public JPanel modificarCuenta (){
 
-
-
         JPanel pChangeData = new JPanel();
         pChangeData.setSize(507,732);
         pChangeData.setLocation(91,61);
-        pChangeData.setBackground(new Color(0, 255, 127));
+        pChangeData.setBackground(new Color(28, 27, 32));
         pChangeData.setLayout(null);
         this.add(pChangeData);
 
@@ -567,19 +596,19 @@ public class ExamenVentana extends JFrame {
         JLabel micuenta = new JLabel("Mi cuenta personal");
         micuenta.setFont(new Font("Arial", Font.BOLD, 25));
         micuenta.setHorizontalAlignment(SwingConstants.CENTER);
+        micuenta.setForeground(new Color(242, 247, 133));
         micuenta.setBounds(76, 70, 359, 46);
         pChangeData.add(micuenta);
 
         JLabel cuentaimagen = new JLabel("");
         cuentaimagen.setHorizontalAlignment(SwingConstants.CENTER);
         cuentaimagen.setHorizontalTextPosition(SwingConstants.CENTER);
-        cuentaimagen.setIcon(new ImageIcon("src/cuenta.png"));
-        cuentaimagen.setBackground(new Color(255, 255, 255));
+        cuentaimagen.setIcon(new ImageIcon("src/datos2.png"));
         cuentaimagen.setBounds(166, 127, 173, 108);
         pChangeData.add(cuentaimagen);
 
         JLabel cambiarNombre = new JLabel("Nombre:");
-        cambiarNombre.setForeground(new Color(0, 0, 0));
+        cambiarNombre.setForeground(new Color(242, 247, 133));
         cambiarNombre.setHorizontalAlignment(SwingConstants.LEFT);
         cambiarNombre.setFont(new Font("Arial", Font.BOLD, 18));
         cambiarNombre.setBounds(76, 246, 188, 34);
@@ -592,7 +621,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel cambiarApellidos = new JLabel("Apellidos:");
         cambiarApellidos.setHorizontalAlignment(SwingConstants.LEFT);
-        cambiarApellidos.setForeground(Color.BLACK);
+        cambiarApellidos.setForeground(new Color(242, 247, 133));
         cambiarApellidos.setFont(new Font("Arial", Font.BOLD, 18));
         cambiarApellidos.setBounds(76, 328, 188, 34);
         pChangeData.add(cambiarApellidos);
@@ -604,7 +633,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel cambiarCorreo = new JLabel("Correo:");
         cambiarCorreo.setHorizontalAlignment(SwingConstants.LEFT);
-        cambiarCorreo.setForeground(Color.BLACK);
+        cambiarCorreo.setForeground(new Color(242, 247, 133));
         cambiarCorreo.setFont(new Font("Arial", Font.BOLD, 18));
         cambiarCorreo.setBounds(76, 407, 188, 34);
         pChangeData.add(cambiarCorreo);
@@ -616,7 +645,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel cambiarPassword = new JLabel("Contraseña:");
         cambiarPassword.setHorizontalAlignment(SwingConstants.LEFT);
-        cambiarPassword.setForeground(Color.BLACK);
+        cambiarPassword.setForeground(new Color(242, 247, 133));
         cambiarPassword.setFont(new Font("Arial", Font.BOLD, 18));
         cambiarPassword.setBounds(76, 487, 188, 34);
         pChangeData.add(cambiarPassword);
@@ -627,23 +656,23 @@ public class ExamenVentana extends JFrame {
 
 
         JButton cancelar = new JButton("Cancelar");
-        cancelar.setFont(new Font("Arial", Font.BOLD, 11));
+        cancelar.setFont(new Font("Arial", Font.BOLD, 22));
         cancelar.setBorderPainted(false);
-        cancelar.setForeground(Color.BLACK);
-        cancelar.setBackground(Color.RED);
+        cancelar.setForeground(new Color(255, 255, 255));
+        cancelar.setBackground(new Color(65, 105, 225));
         cancelar.setBounds(76, 575, 173, 34);
         pChangeData.add(cancelar);
 
         JButton actualizar = new JButton("Actualizar");
-        actualizar.setFont(new Font("Arial", Font.BOLD, 11));
-        actualizar.setForeground(Color.BLACK);
+        actualizar.setFont(new Font("Arial", Font.BOLD, 22));
+        actualizar.setForeground(new Color(28, 27, 32));
         actualizar.setBorderPainted(false);
-        actualizar.setBackground(new Color(50, 205, 50));
+        actualizar.setBackground(new Color(255, 215, 0));
         actualizar.setBounds(251, 575,173, 34);
         pChangeData.add(actualizar);
 
         JPanel fondo = new JPanel();
-        fondo.setBackground(new Color(60, 179, 113));
+        fondo.setBackground(new Color(28, 27, 32));
         fondo.setBounds(61, 246, 377, 393);
         pChangeData.add(fondo);
 
@@ -715,22 +744,23 @@ public class ExamenVentana extends JFrame {
         JPanel pRegister = new JPanel();
         pRegister.setSize(507,732);
         pRegister.setLocation(91,61);
-        pRegister.setBackground(new Color(0, 255, 127));
+        pRegister.setBackground(new Color(28, 27, 32));
         pRegister.setLayout(null);
 
         JLabel crearrrr = new JLabel("Crear usuario");
         crearrrr.setFont(new Font("Arial", Font.BOLD, 25));
         crearrrr.setHorizontalAlignment(SwingConstants.CENTER);
+        crearrrr.setForeground(new Color(242, 247, 133));
         crearrrr.setBounds(110, 50, 283, 46);
         pRegister.add(crearrrr);
 
         JLabel userrr = new JLabel("");
-        userrr.setIcon(new ImageIcon("src/crearr.png"));
-        userrr.setBounds(188, 107, 110, 133);
+        userrr.setIcon(new ImageIcon("src/userReg.png"));
+        userrr.setBounds(188, 107, 150, 150);
         pRegister.add(userrr);
 
         JLabel nombre = new JLabel("Nombre:", JLabel.LEFT);
-        nombre.setForeground(new Color(0, 0, 0));
+        nombre.setForeground(new Color(242, 247, 133));
         nombre.setHorizontalAlignment(SwingConstants.LEFT);
         nombre.setFont(new Font("Arial", Font.BOLD, 18));
         nombre.setBounds(76, 246, 188, 34);
@@ -745,7 +775,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel apellidos = new JLabel("Apellidos:", JLabel.LEFT);
         apellidos.setHorizontalAlignment(SwingConstants.LEFT);
-        apellidos.setForeground(Color.BLACK);
+        apellidos.setForeground(new Color(242, 247, 133));
         apellidos.setFont(new Font("Arial", Font.BOLD, 18));
         apellidos.setBounds(76, 328, 188, 34);
         apellidos.setVisible(true);
@@ -759,7 +789,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel correo = new JLabel("Correo:", JLabel.LEFT);
         correo.setHorizontalAlignment(SwingConstants.LEFT);
-        correo.setForeground(Color.BLACK);
+        correo.setForeground(new Color(242, 247, 133));
         correo.setFont(new Font("Arial", Font.BOLD, 18));
         correo.setBounds(76, 407, 188, 34);
         correo.setVisible(true);
@@ -773,7 +803,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel passwordNew = new JLabel("Contraseña:", JLabel.LEFT);
         passwordNew.setHorizontalAlignment(SwingConstants.LEFT);
-        passwordNew.setForeground(Color.BLACK);
+        passwordNew.setForeground(new Color(242, 247, 133));
         passwordNew.setFont(new Font("Arial", Font.BOLD, 18));
         passwordNew.setBounds(76, 487, 188, 34);
         passwordNew.setVisible(true);
@@ -787,7 +817,7 @@ public class ExamenVentana extends JFrame {
 
         JLabel passwordNew2 = new JLabel("Confirmar contraseña:", JLabel.LEFT);
         passwordNew2.setHorizontalAlignment(SwingConstants.LEFT);
-        passwordNew2.setForeground(Color.BLACK);
+        passwordNew2.setForeground(new Color(242, 247, 133));
         passwordNew2.setFont(new Font("Arial", Font.BOLD, 18));
         passwordNew2.setBounds(76, 558, 211, 34);
         passwordNew2.setVisible(true);
@@ -801,24 +831,24 @@ public class ExamenVentana extends JFrame {
 
         JButton cancelar = new JButton("Cancelar");
         cancelar.setBorderPainted(false);
-        cancelar.setForeground(Color.BLACK);
-        cancelar.setFont(new Font("Arial", Font.BOLD, 11));
-        cancelar.setBackground(new Color(255, 0, 0));
+        cancelar.setForeground(new Color(255, 255, 255));
+        cancelar.setFont(new Font("Arial", Font.BOLD, 17));
+        cancelar.setBackground(new Color(65, 105, 225));
         cancelar.setBounds(76, 652, 173, 34);
         cancelar.setVisible(true);
         pRegister.add(cancelar);
 
         JButton registrar = new JButton("Registrar");
-        registrar.setBackground(new Color(50, 205, 50));
-        registrar.setFont(new Font("Arial", Font.BOLD, 11));
-        registrar.setForeground(Color.BLACK);
+        registrar.setBackground(new Color(255, 215, 0));
+        registrar.setFont(new Font("Arial", Font.BOLD, 17));
+        registrar.setForeground(new Color(28, 27, 32));
         registrar.setBorderPainted(false);
         registrar.setBounds(252, 652, 173, 34);
         registrar.setVisible(true);
         pRegister.add(registrar);
 
         JPanel panel_1 = new JPanel();
-        panel_1.setBackground(new Color(60, 179, 113));
+        panel_1.setBackground(new Color(28, 27, 32));
         panel_1.setBounds(42, 230, 421, 491);
         panel_1.setLayout(null);
         pRegister.add(panel_1);
@@ -898,19 +928,22 @@ public class ExamenVentana extends JFrame {
         JPanel pComoRegistrar = new JPanel();
         pComoRegistrar.setSize(507,732);
         pComoRegistrar.setLocation(91,61);
-        pComoRegistrar.setBackground(new Color(0, 255, 127));
+        pComoRegistrar.setBackground(new Color(28, 27, 32));
         pComoRegistrar.setLayout(null);
 
         JLabel comoCrearUserLabel = new JLabel("¿Como crear usuario?");
         comoCrearUserLabel.setFont(new Font("Arial", Font.BOLD, 25));
+        comoCrearUserLabel.setForeground(new Color(255, 215,0));
         comoCrearUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
         comoCrearUserLabel.setBounds(75, 165, 359, 46);
         pComoRegistrar.add(comoCrearUserLabel);
 
         JButton crearUsuarioAhoraBoton = new JButton("Crear un usuario ahora");
-        crearUsuarioAhoraBoton.setFont(new Font("Arial", Font.BOLD, 13));
+        crearUsuarioAhoraBoton.setFont(new Font("Arial", Font.BOLD, 17));
         crearUsuarioAhoraBoton.setBounds(144, 500, 219, 34);
-        crearUsuarioAhoraBoton.setBackground(new Color(50, 205, 50));
+        crearUsuarioAhoraBoton.setForeground(new Color(255, 215,0));
+        crearUsuarioAhoraBoton.setBackground(new Color(65, 105, 225));
+        crearUsuarioAhoraBoton.setBorderPainted(false);
         pComoRegistrar.add(crearUsuarioAhoraBoton);
 
 
@@ -936,8 +969,9 @@ public class ExamenVentana extends JFrame {
 
         comoCrearTA.setFont(new Font("Arial", Font.BOLD, 18));
         comoCrearTA.setEditable(false);
+        comoCrearTA.setForeground(new Color(255, 215,0));
         comoCrearTA.setBounds(76, 225, 353, 296);
-        comoCrearTA.setBackground(new Color(0, 255, 127));
+        comoCrearTA.setBackground(new Color(40, 40, 43));
 
         pComoRegistrar.add(comoCrearTA);
 
