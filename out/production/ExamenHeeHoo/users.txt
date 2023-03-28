@@ -1,4 +1,1 @@
-a,a,a,a
-i,i,i,i
-o,o,o,o
-u,u,u,u
+y,y,y,y
