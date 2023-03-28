@@ -722,10 +722,10 @@ public class ExamenVentana extends JFrame {
                     }
                 }
                 else if (cambiarNombreTF.getText().equals("") || cambiarApellidosTF.getText().equals("")|| cambiarCorreoTF.getText().equals("")|| new String(cambiarPasswordTF.getPassword()).equals("")){
-                    JOptionPane.showMessageDialog(null,"Rellene todos los campos","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Rellene todos los campos solicitados","mal:(!", JOptionPane.ERROR_MESSAGE);
                 }
                 else if (vacia.length() == 0){
-                    JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada por alguna mañosada, reviertalo","mal:(!", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Al parecer toda la informacion de los usuarios ha sido borrada que pena, si fue usted puede revertirlo con ctrl+z","mal:(!", JOptionPane.ERROR_MESSAGE);
                     vacia.delete();
                 }
                 else{
@@ -916,7 +916,7 @@ public class ExamenVentana extends JFrame {
 
                     }
                     else{
-                        JOptionPane.showMessageDialog(null,"Las contrase;as no coinciden","mal:(!", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null,"Las contraseñas no coinciden","mal:(!", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 }
@@ -931,7 +931,7 @@ public class ExamenVentana extends JFrame {
         pComoRegistrar.setBackground(new Color(28, 27, 32));
         pComoRegistrar.setLayout(null);
 
-        JLabel comoCrearUserLabel = new JLabel("¿Como crear usuario?");
+        JLabel comoCrearUserLabel = new JLabel("¿Cómo crear usuario?");
         comoCrearUserLabel.setFont(new Font("Arial", Font.BOLD, 25));
         comoCrearUserLabel.setForeground(new Color(255, 215,0));
         comoCrearUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -957,15 +957,15 @@ public class ExamenVentana extends JFrame {
             });
         JTextArea comoCrearTA = new JTextArea();
         comoCrearTA.setText("\n    1.- Hacer click en la opción 'usuarios' " +
-                            "\n    en el menú superior" +
+                            "\n    en el menú superior." +
                             "\n"+
-                            "\n    2.- Hacer click en 'Crear usuario'" +
+                            "\n    2.- Hacer click en 'Crear usuario'." +
                             "\n"+
-                            "\n    3.- Llenar los campos solicitados" +
+                            "\n    3.- Llenar los campos solicitados." +
                             "\n"+
-                            "\n    4.- Hacer click en 'Registrar'" +
+                            "\n    4.- Hacer click en 'Registrar'." +
                             "\n"+
-                            "\n    8.- Listo, el usuario se ha creado");
+                            "\n    8.- Listo, el usuario se ha creado.");
 
         comoCrearTA.setFont(new Font("Arial", Font.BOLD, 18));
         comoCrearTA.setEditable(false);
